@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Green Hyundai Accent on the Road</title>
+<meta name="description" content="A 1998 green Hyundai Accent driving down a road with a woman standing on the roadside." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* easing curves recommended by the animate skill */
+    --ease-out-quint:cubic-bezier(.23,1,.32,1);
+    --ease-in-out-cubic:cubic-bezier(.645,.045,.355,1);
+    --ease-out-cubic:cubic-bezier(.33,1,.68,1);
+
+    --sky-top:#7ec8f0;
+    --sky-mid:#bfe6f7;
+    --grass:#5aa845;
+    --grass-dk:#3f8a31;
+    --road:#3b3f46;
+    --road-dk:#2c3036;
+    --line:#f4d44e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:#0d1117;
+    font-family:"Poppins",system-ui,sans-serif;
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;min-height:100dvh;
+  }
+
+  .scene{
+    position:relative;
+    width:min(100vw,1100px);
+    aspect-ratio:16/9;
+    overflow:hidden;
+    border-radius:14px;
+    box-shadow:0 30px 70px rgba(0,0,0,.55);
+    isolation:isolate;
+  }
+
+  /* ---------- SKY ---------- */
+  .sky{
+    position:absolute;inset:0;z-index:0;
+    background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,#e8f6fb 70%);
+  }
+  .sun{
+    position:absolute;top:9%;left:14%;width:9%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle,#fff7cf 0%,#ffe680 45%,rgba(255,230,128,0) 72%);
+    animation:sunPulse 6s var(--ease-in-out-cubic) infinite alternate;
+  }
+  @keyframes sunPulse{from{transform:scale(.96);opacity:.9}to{transform:scale(1.06);opacity:1}}
+
+  /* drifting clouds */
+  .cloud{
+    position:absolute;z-index:1;
+    background:#fff;border-radius:60px;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.06));
+    opacity:.95;
+  }
+  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .c1{top:14%;left:-20%;width:140px;height:42px;animation:drift 34s linear infinite}
+  .c1::before{width:60px;height:60px;top:-26px;left:24px}
+  .c1::after{width:46px;height:46px;top:-18px;left:74px}
+  .c2{top:26%;left:-30%;width:100px;height:32px;transform:scale(.8);animation:drift 46s linear infinite 6s}
+  .c2::before{width:46px;height:46px;top:-20px;left:18px}
+  .c2::after{width:36px;height:36px;top:-14px;left:54px}
+  @keyframes drift{from{transform:translateX(0)}to{transform:translateX(160vw)}}
+
+  /* ---------- GRASS ---------- */
+  .grass{
+    position:absolute;left:0;right:0;bottom:0;height:42%;z-index:2;
+    background:linear-gradient(180deg,var(--grass) 0%,var(--grass-dk) 100%);
+  }
+
+  /* ---------- ROAD ---------- */
+  .road{
+    position:absolute;left:0;right:0;bottom:0;height:34%;z-index:3;
+    background:linear-gradient(180deg,var(--road-dk) 0%,var(--road) 18%,var(--road) 100%);
+    box-shadow:0 -3px 0 #6b6f76, 0 -7px 14px rgba(0,0,0,.25);
+  }
+  /* soft shoulder edges */
+  .road::before,.road::after{
+    content:"";position:absolute;left:0;right:0;height:6px;background:#d9dde2;opacity:.55;
+  }
+  .road::before{top:7px}
+  .road::after{bottom:14px}
+
+  /* moving centre dashes */
+  .lane{
+    position:absolute;left:0;right:0;top:50%;height:10px;z-index:4;transform:translateY(-50%);
+    background:repeating-linear-gradient(90deg,var(--line) 0 56px,transparent 56px 120px);
+    border-radius:6px;
+    animation:laneMove .55s linear infinite;
+  }
+  @keyframes laneMove{from{background-position:0 0}to{background-position:-120px 0}}
+
+  /* ---------- WOMAN (right side of the road) ---------- */
+  .woman{
+    position:absolute;z-index:6;right:9%;bottom:13%;width:13%;height:auto;
+    transform-origin:bottom center;
+    opacity:0;transform:translateY(24px);
+    animation:riseUp 1s var(--ease-out-quint) .5s forwards;
+  }
+  .woman .sway{transform-origin:bottom center;animation:sway 4.5s var(--ease-in-out-cubic) 1.6s infinite alternate}
+  @keyframes riseUp{to{opacity:1;transform:translateY(0)}}
+  @keyframes sway{from{transform:rotate(-1.4deg)}to{transform:rotate(1.4deg)}}
+  .woman .hair{transform-origin:top center;animation:hairFlow 3.6s ease-in-out 1.6s infinite alternate}
+  @keyframes hairFlow{from{transform:skewX(0deg)}to{transform:skewX(3deg)}}
+
+  /* ---------- CAR (green Hyundai Accent '98) ---------- */
+  .car{
+    position:absolute;z-index:5;left:50%;bottom:8.5%;width:38%;height:auto;
+    transform:translateX(-50%);
+    animation:carEnter 1.6s var(--ease-out-quint) both;
+  }
+  /* drive in from the left, settle in the centre lane */
+  @keyframes carEnter{
+    0%{transform:translateX(-180%);}
+    100%{transform:translateX(-50%);}
+  }
+  .car .body-bounce{transform-origin:center;animation:bounce 1.1s var(--ease-in-out-cubic) 1.6s infinite alternate}
+  @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-1.4px)}}
+  .wheel{transform-box:fill-box;transform-origin:center;animation:spin .55s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* shadow under the car */
+  .car-shadow{
+    position:absolute;z-index:4;left:50%;bottom:8%;width:34%;height:3%;
+    transform:translateX(-50%);
+    background:radial-gradient(ellipse at center,rgba(0,0,0,.4),transparent 70%);
+    animation:shadowPulse 1.1s var(--ease-in-out-cubic) 1.6s infinite alternate;
+  }
+  @keyframes shadowPulse{from{transform:translateX(-50%) scaleX(1)}to{transform:translateX(-50%) scaleX(.96)}}
+
+  /* caption */
+  .caption{
+    position:absolute;z-index:7;left:50%;top:5%;transform:translateX(-50%);
+    text-align:center;color:#0b2a3a;
+    text-shadow:0 1px 0 rgba(255,255,255,.4);
+    opacity:0;animation:riseUp .9s var(--ease-out-quint) .2s forwards;
+  }
+  .caption b{font-weight:700;font-size:clamp(1rem,2.4vw,1.6rem);letter-spacing:.02em}
+  .caption span{display:block;font-weight:500;font-size:clamp(.6rem,1.4vw,.85rem);opacity:.8}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+    .woman,.caption{opacity:1;transform:none}
+    .car{transform:translateX(-50%)}
+  }
+</style>
+</head>
+<body>
+  <div class="scene">
+    <div class="sky"></div>
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+
+    <div class="caption">
+      <b>1998 Hyundai Accent</b>
+      <span>cruising down the open road</span>
+    </div>
+
+    <div class="grass"></div>
+    <div class="road">
+      <div class="lane"></div>
+    </div>
+
+    <!-- ===== BEAUTIFUL WOMAN on the right side of the road ===== -->
+    <svg class="woman" viewBox="0 0 120 260" role="img" aria-label="A beautiful woman standing on the roadside in a red dress.">
+      <g class="sway">
+        <!-- hair behind -->
+        <path class="hair" d="M40 44 C26 50 24 96 34 130 C40 150 44 120 44 96 C44 70 48 52 40 44Z" fill="#3a2417"/>
+        <path class="hair" d="M80 44 C94 50 96 96 86 130 C80 150 76 120 76 96 C76 70 72 52 80 44Z" fill="#3a2417"/>
+        <!-- legs -->
+        <rect x="52" y="176" width="7" height="62" rx="3.5" fill="#e8b98f"/>
+        <rect x="61" y="176" width="7" height="62" rx="3.5" fill="#e8b98f"/>
+        <!-- shoes -->
+        <path d="M50 236 h12 l3 8 h-18 z" fill="#7a1020"/>
+        <path d="M59 236 h12 l3 8 h-18 z" fill="#7a1020"/>
+        <!-- red dress -->
+        <path d="M60 96 C44 96 40 110 38 132 L34 200 C44 210 76 210 86 200 L82 132 C80 110 76 96 60 96Z" fill="#d4243a"/>
+        <path d="M60 96 C52 96 47 112 46 134 L44 198 C52 203 68 203 76 198 L74 134 C73 112 68 96 60 96Z" fill="#e8455a" opacity=".6"/>
+        <!-- arms -->
+        <path d="M44 108 C34 124 32 150 36 172" stroke="#e8b98f" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M76 108 C86 124 88 150 84 172" stroke="#e8b98f" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <!-- neck -->
+        <rect x="55" y="78" width="10" height="18" rx="5" fill="#e8b98f"/>
+        <!-- head -->
+        <circle cx="60" cy="60" r="22" fill="#f0c49a"/>
+        <!-- hair front -->
+        <path d="M38 58 C36 34 52 22 60 22 C68 22 84 34 82 58 C78 48 70 40 60 42 C50 40 42 48 38 58Z" fill="#4a2e1c"/>
+        <path d="M38 58 C40 76 40 96 36 118 C30 96 30 70 38 58Z" fill="#3a2417"/>
+        <path d="M82 58 C80 76 80 96 84 118 C90 96 90 70 82 58Z" fill="#3a2417"/>
+        <!-- face -->
+        <circle cx="52" cy="60" r="2.4" fill="#3a2417"/>
+        <circle cx="68" cy="60" r="2.4" fill="#3a2417"/>
+        <path d="M48 53 q4 -3 8 -.5" stroke="#3a2417" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M64 52.5 q4 -2.5 8 .5" stroke="#3a2417" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M55 66 q5 4 10 0" stroke="#c25a5a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M54 71 q6 5 12 0" fill="#d34d57"/>
+        <circle cx="47" cy="66" r="3" fill="#f3a6a0" opacity=".5"/>
+        <circle cx="73" cy="66" r="3" fill="#f3a6a0" opacity=".5"/>
+      </g>
+    </svg>
+
+    <!-- ===== GREEN HYUNDAI ACCENT 1998 ===== -->
+    <div class="car-shadow"></div>
+    <svg class="car" viewBox="0 0 420 180" role="img" aria-label="A green 1998 Hyundai Accent sedan.">
+      <defs>
+        <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3fae5a"/>
+          <stop offset=".45" stop-color="#1f8d3e"/>
+          <stop offset="1" stop-color="#136b2c"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dff3ff"/>
+          <stop offset="1" stop-color="#9cc6dd"/>
+        </linearGradient>
+        <radialGradient id="tyre" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#0c0c0c"/>
+        </radialGradient>
+      </defs>
+
+      <g class="body-bounce">
+        <!-- lower body -->
+        <path d="M18 120
+                 C20 104 30 100 48 98
+                 L96 96
+                 C112 78 130 66 168 64
+                 L262 64
+                 C300 66 320 82 336 98
+                 L378 104
+                 C396 108 404 114 404 126
+                 L404 140
+                 C404 146 400 150 392 150
+                 L30 150
+                 C22 150 16 146 16 138 Z"
+              fill="url(#paint)" stroke="#0c5421" stroke-width="2"/>
+
+        <!-- roof / cabin (Accent's compact greenhouse) -->
+        <path d="M104 96
+                 C118 80 134 70 168 68
+                 L258 68
+                 C292 70 308 82 322 96 Z"
+              fill="url(#paint)" stroke="#0c5421" stroke-width="2"/>
+
+        <!-- windows -->
+        <path d="M120 94 C132 82 144 76 168 75 L204 75 L204 94 Z" fill="url(#glass)" stroke="#0c5421" stroke-width="1.5"/>
+        <path d="M214 75 L256 75 C284 76 298 84 308 94 L214 94 Z" fill="url(#glass)" stroke="#0c5421" stroke-width="1.5"/>
+        <!-- B pillar -->
+        <rect x="205" y="75" width="8" height="19" fill="#0c5421"/>
+
+        <!-- body crease line -->
+        <path d="M30 124 L392 124" stroke="#0c5421" stroke-width="1.5" opacity=".5"/>
+        <!-- door seams -->
+        <path d="M150 100 L150 148" stroke="#0c5421" stroke-width="1.4" opacity=".55"/>
+        <path d="M250 100 L250 148" stroke="#0c5421" stroke-width="1.4" opacity=".55"/>
+        <!-- door handles -->
+        <rect x="170" y="112" width="18" height="4" rx="2" fill="#0c5421"/>
+        <rect x="262" y="112" width="18" height="4" rx="2" fill="#0c5421"/>
+
+        <!-- headlight (front, right side) -->
+        <path d="M404 128 q-2 -12 -16 -14 L388 134 Z" fill="#fff4c2" stroke="#0c5421" stroke-width="1.2"/>
+        <!-- grille / bumper -->
+        <rect x="380" y="136" width="24" height="8" rx="3" fill="#0d3d1c"/>
+        <!-- tail light (rear) -->
+        <path d="M16 130 q1 -8 10 -10 L26 134 Z" fill="#e23b3b" stroke="#0c5421" stroke-width="1"/>
+        <!-- side mirror -->
+        <path d="M118 92 l-12 -4 -2 8 14 2 z" fill="#136b2c" stroke="#0c5421" stroke-width="1"/>
+
+        <!-- highlight sheen on roof -->
+        <path d="M130 90 C150 76 180 72 220 72" stroke="#bff0c8" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+      </g>
+
+      <!-- wheels -->
+      <g>
+        <circle cx="118" cy="150" r="30" fill="#111"/>
+        <circle cx="118" cy="150" r="30" fill="url(#tyre)"/>
+        <circle class="wheel" cx="118" cy="150" r="17" fill="#c9ccd1"/>
+        <g class="wheel">
+          <circle cx="118" cy="150" r="17" fill="none" stroke="#9aa0a6" stroke-width="2"/>
+          <g stroke="#7d828a" stroke-width="3" stroke-linecap="round">
+            <line x1="118" y1="150" x2="118" y2="135"/>
+            <line x1="118" y1="150" x2="131" y2="158"/>
+            <line x1="118" y1="150" x2="105" y2="158"/>
+          </g>
+          <circle cx="118" cy="150" r="4" fill="#5c6066"/>
+        </g>
+      </g>
+      <g>
+        <circle cx="300" cy="150" r="30" fill="#111"/>
+        <circle cx="300" cy="150" r="30" fill="url(#tyre)"/>
+        <circle class="wheel" cx="300" cy="150" r="17" fill="#c9ccd1"/>
+        <g class="wheel">
+          <circle cx="300" cy="150" r="17" fill="none" stroke="#9aa0a6" stroke-width="2"/>
+          <g stroke="#7d828a" stroke-width="3" stroke-linecap="round">
+            <line x1="300" y1="150" x2="300" y2="135"/>
+            <line x1="300" y1="150" x2="313" y2="158"/>
+            <line x1="300" y1="150" x2="287" y2="158"/>
+          </g>
+          <circle cx="300" cy="150" r="4" fill="#5c6066"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+</body>
+</html>
