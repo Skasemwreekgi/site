@@ -3,375 +3,780 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Empire Studios</title>
-<meta name="description" content="Empire Studios — the gates are open." />
+<title>Empire Studios · A creative empire</title>
+<meta name="description" content="Empire Studios is a multidisciplinary creative house forging brands, films, and digital worlds with the precision of a mint." />
+<meta name="theme-color" content="#070509" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
 <style>
   :root{
+    --bg:#070509;
     --bg-top:#0a0a12;
     --bg-mid:#141019;
     --bg-low:#1c1410;
+    --panel:#0e0b10;
+    --panel-2:#141019;
     --gold:#C8962A;
     --gold-bright:#F4D88A;
     --gold-deep:#8A6515;
     --glow:#FFE9B0;
     --ink:#0c0a08;
+    --text:#F1E7D5;
+    --muted:#A99C84;
+    --hair:rgba(244,216,138,.14);
+    --r-lg:30px;
+    --r-md:20px;
+    --r-pad:6px;
     --ease:cubic-bezier(.16,1,.3,1);
+    --ease-spring:cubic-bezier(.32,.72,0,1);
+    --maxw:1320px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
+  html{scroll-behavior:smooth}
+  html,body{min-height:100%}
   body{
-    background:#070509;
-    color:#F1E7D5;
-    font-family:"Cinzel",Georgia,serif;
-    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
   }
+  .serif{font-family:"Cinzel",Georgia,serif}
+  ::selection{background:rgba(200,150,42,.35);color:#fff}
 
-  /* ===== SCENE ===== */
+  /* fixed film grain + vignette overlay (GPU-safe, pointer-none) */
+  .grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+
+  /* ============ EYEBROW (used sparingly) ============ */
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:.6em;
+    border-radius:999px;padding:.42em 1em;
+    border:1px solid var(--hair);background:rgba(244,216,138,.05);
+    font-size:.66rem;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--gold-bright);font-weight:500;
+  }
+  .eyebrow::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-bright)}
+
+  /* ============ BUTTONS (pill + button-in-button) ============ */
+  .btn{
+    display:inline-flex;align-items:center;gap:.7rem;
+    border-radius:999px;font-family:"Plus Jakarta Sans",sans-serif;
+    font-weight:600;font-size:.92rem;letter-spacing:.01em;
+    padding:.78rem .8rem .78rem 1.5rem;cursor:pointer;border:0;
+    transition:transform .5s var(--ease-spring), background .4s var(--ease), box-shadow .5s var(--ease), color .4s var(--ease);
+    white-space:nowrap;
+  }
+  .btn .ico{
+    width:2.1rem;height:2.1rem;border-radius:999px;display:grid;place-items:center;flex:0 0 auto;
+    transition:transform .5s var(--ease-spring), background .4s var(--ease);
+  }
+  .btn .ico svg{width:16px;height:16px}
+  .btn-primary{
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold) 60%,var(--gold-deep));
+    color:#241a07;
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 14px 34px -12px rgba(200,150,42,.6);
+  }
+  .btn-primary .ico{background:rgba(36,26,7,.16)}
+  .btn-primary:hover{box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 44px -10px rgba(244,216,138,.7)}
+  .btn-primary:hover .ico{transform:translate(3px,-2px) scale(1.06);background:rgba(36,26,7,.26)}
+  .btn-primary:active{transform:scale(.975)}
+  .btn-ghost{
+    background:rgba(244,216,138,.04);color:var(--text);
+    border:1px solid var(--hair);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .btn-ghost .ico{background:rgba(244,216,138,.08)}
+  .btn-ghost:hover{background:rgba(244,216,138,.09);color:#fff}
+  .btn-ghost:hover .ico{transform:translate(3px,-2px) scale(1.06)}
+  .btn-ghost:active{transform:scale(.975)}
+  .magnetic{display:inline-block;transform:translate(var(--mx,0),var(--my,0));transition:transform .45s var(--ease-spring);will-change:transform}
+
+  /* ============ NAV (floating glass island) ============ */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:center;
+    padding:clamp(14px,2.4vw,26px) 16px;pointer-events:none}
+  .nav-inner{
+    pointer-events:auto;display:flex;align-items:center;gap:clamp(14px,3vw,40px);
+    width:min(100%,var(--maxw));height:62px;padding:0 12px 0 24px;
+    border-radius:999px;border:1px solid transparent;background:transparent;
+    transition:background .5s var(--ease), border-color .5s var(--ease), box-shadow .5s var(--ease), backdrop-filter .5s var(--ease);
+  }
+  .nav.scrolled .nav-inner{
+    background:rgba(12,9,14,.62);
+    border-color:var(--hair);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 18px 50px -22px rgba(0,0,0,.9);
+  }
+  .brand{font-family:"Cinzel Decorative",serif;font-weight:700;font-size:1.02rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:.55em;margin-right:auto}
+  .brand .crest{width:22px;height:22px;color:var(--gold)}
+  .nav-links{display:flex;align-items:center;gap:clamp(18px,2.2vw,34px)}
+  .nav-links a{font-size:.84rem;letter-spacing:.03em;color:var(--muted);font-weight:500;position:relative;padding:4px 0;transition:color .35s var(--ease)}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:100%;height:1px;background:var(--gold);
+    transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease-spring)}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a:hover::after{transform:scaleX(1)}
+  .nav-cta{padding:.55rem .7rem .55rem 1.2rem;font-size:.82rem}
+  .nav-cta .ico{width:1.7rem;height:1.7rem}
+  .nav-cta .ico svg{width:13px;height:13px}
+
+  /* hamburger */
+  .burger{display:none;pointer-events:auto;width:46px;height:46px;border-radius:999px;border:1px solid var(--hair);
+    background:rgba(12,9,14,.6);position:relative;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .burger span{position:absolute;left:13px;width:20px;height:1.6px;background:var(--text);border-radius:2px;
+    transition:transform .5s var(--ease-spring), opacity .3s var(--ease);transform-origin:center}
+  .burger span:nth-child(1){top:18px}
+  .burger span:nth-child(2){top:23.2px}
+  .burger span:nth-child(3){top:28.4px}
+  body.menu-open .burger span:nth-child(1){transform:translateY(5.2px) rotate(45deg)}
+  body.menu-open .burger span:nth-child(2){opacity:0}
+  body.menu-open .burger span:nth-child(3){transform:translateY(-5.2px) rotate(-45deg)}
+
+  /* mobile overlay menu */
+  .mobile-menu{position:fixed;inset:0;z-index:45;display:flex;flex-direction:column;justify-content:center;gap:6px;
+    padding:0 clamp(28px,8vw,80px);
+    background:rgba(7,5,9,.82);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);
+    opacity:0;visibility:hidden;transition:opacity .55s var(--ease), visibility .55s}
+  body.menu-open .mobile-menu{opacity:1;visibility:visible}
+  .mobile-menu a{font-family:"Cinzel",serif;font-size:clamp(2rem,9vw,3.4rem);font-weight:700;color:var(--text);
+    padding:.14em 0;opacity:0;transform:translateY(40px);transition:opacity .6s var(--ease), transform .7s var(--ease-spring)}
+  body.menu-open .mobile-menu a{opacity:1;transform:none}
+  body.menu-open .mobile-menu a:nth-child(1){transition-delay:.12s}
+  body.menu-open .mobile-menu a:nth-child(2){transition-delay:.18s}
+  body.menu-open .mobile-menu a:nth-child(3){transition-delay:.24s}
+  body.menu-open .mobile-menu a:nth-child(4){transition-delay:.30s}
+  body.menu-open .mobile-menu a:nth-child(5){transition-delay:.36s}
+  .mobile-menu a span{color:var(--gold);font-size:.4em;vertical-align:super;margin-right:.4em;font-family:"Plus Jakarta Sans"}
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal{opacity:0;transform:translateY(42px);filter:blur(8px);
+    transition:opacity .9s var(--ease), transform 1s var(--ease-spring), filter .9s var(--ease);
+    transition-delay:var(--rd,0ms);will-change:transform,opacity}
+  .reveal.in{opacity:1;transform:none;filter:blur(0)}
+
+  /* ============ HERO SCENE ============ */
   .scene{
-    position:relative;
-    width:100%;
-    min-height:100vh;min-height:100dvh;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    gap:clamp(18px,3.5vh,46px);
-    padding:5vh 16px 0;
-    overflow:hidden;
-    isolation:isolate;
+    position:relative;width:100%;min-height:100dvh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(14px,2.6vh,30px);
+    padding:88px 16px 40px;overflow:hidden;isolation:isolate;text-align:center;
   }
-
-  /* ----- Background sky ----- */
-  .sky{
-    position:absolute;inset:0;z-index:-3;
+  .sky{position:absolute;inset:0;z-index:-3;
     background:
-      radial-gradient(120% 80% at 50% 118%, rgba(200,150,42,.28), transparent 55%),
+      radial-gradient(120% 80% at 50% 122%, rgba(200,150,42,.30), transparent 55%),
       radial-gradient(80% 60% at 50% -8%, rgba(120,120,180,.10), transparent 60%),
-      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 48%, var(--bg-low) 100%);
-  }
-  /* moon glow behind castle */
-  .moon{
-    position:absolute;left:50%;top:30%;z-index:-3;
-    width:min(70vw,560px);aspect-ratio:1;transform:translate(-50%,-50%);
-    background:radial-gradient(circle, rgba(255,233,176,.20), rgba(255,233,176,.06) 40%, transparent 68%);
-    filter:blur(6px);
-  }
-  /* stars */
-  .stars,.stars::after{
-    position:absolute;top:0;left:0;width:2px;height:2px;border-radius:50%;background:transparent;z-index:-3;
-  }
-  .stars{
-    box-shadow:
-      40px 60px #fff,180px 120px #ffe9b0,320px 40px #fff,500px 160px #fff,
-      680px 80px #ffe9b0,860px 140px #fff,1040px 60px #fff,1220px 110px #ffe9b0,
-      120px 200px #fff,420px 240px #fff,760px 220px #ffe9b0,980px 260px #fff,
-      1300px 200px #fff,60px 320px #fff,260px 300px #ffe9b0,620px 340px #fff,
-      900px 300px #fff,1180px 340px #fff,200px 30px #fff,540px 90px #ffe9b0,
-      1000px 180px #fff,1340px 70px #fff,360px 150px #fff,720px 30px #fff;
-    animation:twinkle 4s ease-in-out infinite alternate;
-  }
+      linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 48%, var(--bg-low) 100%);}
+  .moon{position:absolute;left:50%;top:28%;z-index:-3;width:min(64vw,520px);aspect-ratio:1;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(255,233,176,.20), rgba(255,233,176,.06) 40%, transparent 68%);filter:blur(6px);}
+  .stars,.stars::after{position:absolute;top:0;left:0;width:2px;height:2px;border-radius:50%;background:transparent;z-index:-3}
+  .stars{box-shadow:
+      40px 60px #fff,180px 120px #ffe9b0,320px 40px #fff,500px 160px #fff,680px 80px #ffe9b0,860px 140px #fff,
+      1040px 60px #fff,1220px 110px #ffe9b0,120px 200px #fff,420px 240px #fff,760px 220px #ffe9b0,980px 260px #fff,
+      1300px 200px #fff,60px 320px #fff,260px 300px #ffe9b0,620px 340px #fff,900px 300px #fff,1180px 340px #fff,
+      200px 30px #fff,540px 90px #ffe9b0,1000px 180px #fff,1340px 70px #fff,360px 150px #fff,720px 30px #fff;
+    animation:twinkle 4s ease-in-out infinite alternate;}
   .stars::after{content:"";box-shadow:
-      90px 90px #fff,240px 50px #fff,470px 200px #ffe9b0,650px 150px #fff,
-      820px 60px #fff,1080px 130px #ffe9b0,1260px 40px #fff,150px 270px #fff,
-      390px 120px #fff,710px 280px #fff,950px 90px #ffe9b0,1150px 230px #fff;
+      90px 90px #fff,240px 50px #fff,470px 200px #ffe9b0,650px 150px #fff,820px 60px #fff,1080px 130px #ffe9b0,
+      1260px 40px #fff,150px 270px #fff,390px 120px #fff,710px 280px #fff,950px 90px #ffe9b0,1150px 230px #fff;
     animation:twinkle 5.5s ease-in-out infinite alternate-reverse;}
   @keyframes twinkle{from{opacity:.35}to{opacity:1}}
-
-  /* ground mist */
-  .mist{
-    position:absolute;left:0;right:0;bottom:0;height:34%;z-index:-2;
-    background:linear-gradient(180deg,transparent, rgba(28,20,16,.65) 55%, rgba(10,7,5,.95));
-  }
+  .mist{position:absolute;left:0;right:0;bottom:0;height:34%;z-index:-2;
+    background:linear-gradient(180deg,transparent, rgba(28,20,16,.65) 55%, rgba(10,7,5,.95));}
   .vignette{position:absolute;inset:0;z-index:-1;pointer-events:none;
     box-shadow:inset 0 0 220px 60px rgba(0,0,0,.7), inset 0 -60px 120px rgba(0,0,0,.6);}
 
-  /* ===== TITLE ===== */
-  .title-wrap{
-    text-align:center;z-index:2;
-    opacity:0;transform:translateY(-26px);
-    animation:titleIn 1.1s var(--ease) .25s forwards;
-  }
+  .title-wrap{z-index:2;opacity:0;transform:translateY(-26px);animation:titleIn 1.1s var(--ease) .25s forwards;display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2vh,22px)}
   @keyframes titleIn{to{opacity:1;transform:none}}
-
-  .kicker{
-    font-family:"Cinzel",serif;font-weight:600;
-    font-size:clamp(.6rem,1.6vw,.8rem);letter-spacing:.55em;
-    text-transform:uppercase;color:var(--gold);margin-left:.55em;
-    opacity:.9;
-  }
   .title{
     font-family:"Cinzel Decorative","Cinzel",serif;font-weight:900;
-    font-size:clamp(2.6rem,9.5vw,7rem);line-height:1;
-    letter-spacing:.06em;text-transform:uppercase;
-    margin:.18em 0;
+    font-size:clamp(2.7rem,10vw,7rem);line-height:.95;letter-spacing:.05em;text-transform:uppercase;
     background:linear-gradient(180deg,#FFF6DC 0%,#F4D88A 28%,#C8962A 55%,#8A6515 78%,#E8C36B 100%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;color:transparent;
-    filter:drop-shadow(0 2px 1px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(200,150,42,.35));
-    position:relative;
-  }
-  /* moving sheen across the letters */
-  .title::after{
-    content:"Empire Studios";
-    position:absolute;inset:0;
-    text-transform:uppercase;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+    filter:drop-shadow(0 2px 1px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(200,150,42,.35));position:relative;}
+  .title::after{content:"Empire Studios";position:absolute;inset:0;text-transform:uppercase;
     background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.85) 50%,transparent 62%);
-    -webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;color:transparent;
-    background-size:250% 100%;background-repeat:no-repeat;
-    animation:sheen 5s ease-in-out 1.6s infinite;
-    opacity:.85;
-  }
-  @keyframes sheen{
-    0%{background-position:160% 0}
-    35%,100%{background-position:-60% 0}
-  }
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+    background-size:250% 100%;background-repeat:no-repeat;animation:sheen 5s ease-in-out 1.6s infinite;opacity:.85;}
+  @keyframes sheen{0%{background-position:160% 0}35%,100%{background-position:-60% 0}}
+  .hero-sub{max-width:46ch;color:var(--muted);font-size:clamp(.98rem,1.6vw,1.16rem);line-height:1.55;font-weight:300}
+  .hero-sub b{color:var(--text);font-weight:500}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;z-index:3;
+    opacity:0;animation:fadeUp 1s var(--ease) 1.1s forwards}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-  /* ornamental flourish */
-  .flourish{width:clamp(180px,32vw,360px);height:22px;color:var(--gold);margin:.2em auto 0;opacity:.85}
-
-  /* ===== CASTLE ===== */
-  .castle-wrap{
-    position:relative;z-index:1;width:min(92vw,640px);
-    opacity:0;transform:translateY(34px) scale(.98);
-    animation:castleIn 1.3s var(--ease) .45s forwards;
-  }
+  .castle-wrap{position:relative;z-index:1;width:min(86vw,500px);
+    opacity:0;transform:translateY(34px) scale(.98);animation:castleIn 1.3s var(--ease) .45s forwards}
   @keyframes castleIn{to{opacity:1;transform:none}}
-  .castle{width:100%;height:auto;display:block;
-    filter:drop-shadow(0 40px 50px rgba(0,0,0,.6));}
-
-  /* gate light */
-  .gate-glow{opacity:.18;animation:glowUp 1.9s ease 1.5s forwards;transform-origin:center;}
+  .castle{width:100%;height:auto;display:block;filter:drop-shadow(0 40px 50px rgba(0,0,0,.6))}
+  .gate-glow{opacity:.18;animation:glowUp 1.9s ease 1.5s forwards;transform-origin:center}
   @keyframes glowUp{to{opacity:1}}
-  .gate-core{opacity:0;animation:coreUp 1.6s ease 1.7s forwards;}
+  .gate-core{opacity:0;animation:coreUp 1.6s ease 1.7s forwards}
   @keyframes coreUp{to{opacity:1}}
-  .light-flicker{animation:flicker 3.5s ease-in-out 3.6s infinite;}
+  .light-flicker{animation:flicker 3.5s ease-in-out 3.6s infinite}
   @keyframes flicker{0%,100%{opacity:1}45%{opacity:.86}70%{opacity:.95}}
-  .beam{opacity:0;transform-origin:50% 0;animation:beamUp 2s ease 1.9s forwards;}
+  .beam{opacity:0;transform-origin:50% 0;animation:beamUp 2s ease 1.9s forwards}
   @keyframes beamUp{to{opacity:.5}}
-
-  /* the two doors — swing open */
-  .door{transform-box:fill-box;}
-  .door-left{transform-origin:left center;animation:openLeft 2s var(--ease) 1.3s forwards;}
-  .door-right{transform-origin:right center;animation:openRight 2s var(--ease) 1.3s forwards;}
+  .door{transform-box:fill-box}
+  .door-left{transform-origin:left center;animation:openLeft 2s var(--ease) 1.3s forwards}
+  .door-right{transform-origin:right center;animation:openRight 2s var(--ease) 1.3s forwards}
   @keyframes openLeft{from{transform:scaleX(1)}to{transform:scaleX(.05)}}
   @keyframes openRight{from{transform:scaleX(1)}to{transform:scaleX(.05)}}
 
+  .scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;
+    display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);
+    font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;
+    opacity:0;animation:fadeUp 1s var(--ease) 2.2s forwards}
+  .scroll-hint .line{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);animation:drop 2.2s var(--ease) infinite}
+  @keyframes drop{0%{transform:scaleY(.2);transform-origin:top;opacity:0}40%{opacity:1}100%{transform:scaleY(1);transform-origin:top;opacity:0}}
+
+  /* ============ SECTIONS ============ */
+  section{position:relative}
+  .band{padding:clamp(80px,12vw,170px) 0}
+  .sec-head{max-width:62ch}
+  h2.display{font-family:"Cinzel",serif;font-weight:700;line-height:1.02;letter-spacing:.01em;
+    font-size:clamp(2rem,5.6vw,4.1rem);
+    background:linear-gradient(180deg,#FBF1D9,#D8B66A 70%,#9c7522);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .lede{color:var(--muted);font-size:clamp(1rem,1.5vw,1.18rem);line-height:1.7;font-weight:300;max-width:60ch;margin-top:1.2rem}
+  .lede b{color:var(--text);font-weight:500}
+
+  /* ---- marquee (one per page) ---- */
+  .marquee{border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    padding:26px 0;overflow:hidden;background:linear-gradient(180deg,rgba(244,216,138,.03),transparent)}
+  .marquee-track{display:flex;gap:54px;width:max-content;animation:slide 38s linear infinite;will-change:transform}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee-item{font-family:"Cinzel",serif;font-size:clamp(1.1rem,2.4vw,1.7rem);font-weight:600;
+    color:var(--text);display:flex;align-items:center;gap:54px;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+  .marquee-item::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold-bright)}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* ---- manifesto (editorial, asymmetric) ---- */
+  .manifesto .wrap{display:grid;grid-template-columns:1fr;gap:clamp(24px,4vw,60px)}
+  .manifesto .big{font-family:"Cinzel",serif;font-weight:600;line-height:1.12;letter-spacing:.005em;
+    font-size:clamp(1.7rem,4.4vw,3.3rem);max-width:18ch;color:var(--text)}
+  .manifesto .big i{font-style:italic;color:var(--gold-bright)}
+  .manifesto .meta{display:flex;flex-direction:column;gap:22px;align-self:end;max-width:46ch}
+  .manifesto .meta p{color:var(--muted);font-weight:300;line-height:1.7}
+  .stat-row{display:flex;gap:clamp(24px,5vw,60px);flex-wrap:wrap}
+  .stat .n{font-family:"Cinzel",serif;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--gold-bright);line-height:1}
+  .stat .l{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  @media(min-width:900px){
+    .manifesto .wrap{grid-template-columns:1.15fr .85fr;align-items:end}
+  }
+
+  /* ---- double-bezel card primitive ---- */
+  .bezel{border-radius:var(--r-lg);padding:var(--r-pad);
+    background:linear-gradient(180deg,rgba(244,216,138,.10),rgba(244,216,138,.02));
+    border:1px solid var(--hair);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.8);
+    transition:transform .7s var(--ease-spring), box-shadow .7s var(--ease), border-color .5s var(--ease)}
+  .bezel:hover{transform:translateY(-6px);border-color:rgba(244,216,138,.3);
+    box-shadow:0 44px 80px -34px rgba(0,0,0,.9), 0 0 60px -30px rgba(200,150,42,.5)}
+  .core{border-radius:calc(var(--r-lg) - var(--r-pad));height:100%;position:relative;overflow:hidden;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+
+  /* ---- houses bento ---- */
+  .houses-grid{display:grid;grid-template-columns:1fr;gap:clamp(14px,1.6vw,22px);margin-top:clamp(34px,5vw,64px)}
+  .house{min-height:230px}
+  .house .core{padding:26px;display:flex;flex-direction:column;justify-content:space-between}
+  .house .h-top{display:flex;align-items:center;justify-content:space-between;color:var(--gold);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase}
+  .house .h-top .idx{font-family:"Cinzel",serif}
+  .house h3{font-family:"Cinzel",serif;font-size:clamp(1.3rem,2.4vw,1.9rem);font-weight:600;color:var(--text);margin-top:auto}
+  .house p{color:var(--muted);font-weight:300;margin-top:10px;max-width:38ch}
+  .house .ic{width:34px;height:34px;color:var(--gold-bright)}
+  .house.media .core{justify-content:flex-end;padding:0}
+  .house.media .img{position:absolute;inset:0;background-size:cover;background-position:center;
+    filter:grayscale(1) contrast(1.05) brightness(.78);transition:transform 1.1s var(--ease), filter .9s var(--ease)}
+  .house.media:hover .img{transform:scale(1.06);filter:grayscale(.6) contrast(1.05) brightness(.9)}
+  .house.media .scrim{position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(7,5,9,.1) 0%, rgba(7,5,9,.55) 55%, rgba(7,5,9,.94) 100%),
+      radial-gradient(120% 80% at 50% 130%, rgba(200,150,42,.28), transparent 60%)}
+  .house.media .h-body{position:relative;padding:26px}
+  .house.media .h-body .h-top{margin-bottom:auto}
+  .house.media h3,.house.media .h-body{color:#fff}
+  @media(min-width:760px){
+    .houses-grid{grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(210px,1fr)}
+    .house.feature{grid-column:span 3;grid-row:span 2}
+    .house.tall{grid-column:span 3;grid-row:span 1}
+    .house.wide{grid-column:span 3;grid-row:span 1}
+    .house.third{grid-column:span 2}
+  }
+
+  /* ---- selected work (staggered cascade) ---- */
+  .work-grid{display:grid;grid-template-columns:1fr;gap:clamp(28px,4vw,56px);margin-top:clamp(36px,5vw,70px)}
+  @media(min-width:820px){
+    .work-grid{grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,90px) clamp(40px,5vw,80px)}
+    .work-card:nth-child(even){transform:translateY(64px)}
+    .work-card:nth-child(even).reveal{transform:translateY(106px)}
+    .work-card:nth-child(even).reveal.in{transform:translateY(64px)}
+  }
+  .work-card{cursor:pointer}
+  .work-frame{border-radius:var(--r-lg);padding:var(--r-pad);background:linear-gradient(180deg,rgba(244,216,138,.10),rgba(244,216,138,.02));
+    border:1px solid var(--hair);box-shadow:0 34px 70px -34px rgba(0,0,0,.85);overflow:hidden;
+    transition:transform .8s var(--ease-spring), box-shadow .7s var(--ease), border-color .5s var(--ease)}
+  .work-img{border-radius:calc(var(--r-lg) - var(--r-pad));aspect-ratio:4/3;overflow:hidden;position:relative}
+  .work-img .bg{position:absolute;inset:0;background-size:cover;background-position:center;
+    filter:grayscale(1) contrast(1.04) brightness(.82);transition:transform 1.1s var(--ease), filter 1s var(--ease)}
+  .work-img .tint{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,5,9,.55)),
+    radial-gradient(120% 90% at 50% 140%,rgba(200,150,42,.3),transparent 60%);opacity:.9;transition:opacity .7s var(--ease)}
+  .work-card:hover .work-frame{border-color:rgba(244,216,138,.32);box-shadow:0 50px 90px -36px rgba(0,0,0,.9),0 0 70px -34px rgba(200,150,42,.5)}
+  .work-card:hover .work-img .bg{transform:scale(1.07);filter:grayscale(.45) contrast(1.05) brightness(.95)}
+  .work-card:hover .work-img .tint{opacity:.5}
+  .work-meta{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:20px 6px 0}
+  .work-meta h3{font-family:"Cinzel",serif;font-size:clamp(1.25rem,2.4vw,1.85rem);font-weight:600;color:var(--text)}
+  .work-meta .cat{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+  .work-meta .yr{color:var(--muted);font-size:.85rem;margin-top:4px}
+
+  /* ---- process (numbered ledger) ---- */
+  .process-list{margin-top:clamp(36px,5vw,64px);border-top:1px solid var(--hair)}
+  .step{display:grid;grid-template-columns:1fr;gap:8px;padding:clamp(26px,4vw,44px) 0;border-bottom:1px solid var(--hair);
+    transition:background .5s var(--ease)}
+  .step:hover{background:linear-gradient(90deg,rgba(244,216,138,.04),transparent 70%)}
+  .step .num{font-family:"Cinzel Decorative",serif;font-size:clamp(1.4rem,3vw,2.2rem);color:var(--gold);line-height:1}
+  .step h3{font-family:"Cinzel",serif;font-size:clamp(1.3rem,2.6vw,2rem);font-weight:600;color:var(--text)}
+  .step p{color:var(--muted);font-weight:300;max-width:54ch}
+  @media(min-width:820px){
+    .step{grid-template-columns:120px 1.1fr 1.4fr;gap:clamp(20px,4vw,50px);align-items:baseline}
+  }
+
+  /* ---- contact / closing ---- */
+  .closing{text-align:center}
+  .closing .glow{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:-1;
+    width:min(80vw,760px);aspect-ratio:1.6;
+    background:radial-gradient(circle at 50% 50%,rgba(200,150,42,.28),transparent 62%);filter:blur(12px)}
+  .closing h2{font-family:"Cinzel",serif;font-weight:700;line-height:1.05;
+    font-size:clamp(2.2rem,7vw,5rem);max-width:16ch;margin:0 auto;
+    background:linear-gradient(180deg,#FFF6DC,#E8C36B 55%,#9c7522);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .closing p{color:var(--muted);font-weight:300;max-width:48ch;margin:1.6rem auto 2.4rem;font-size:clamp(1rem,1.6vw,1.18rem)}
+
+  /* ---- footer ---- */
+  footer{border-top:1px solid var(--hair);padding:clamp(50px,7vw,80px) 0 40px}
+  .foot-grid{display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;align-items:flex-start}
+  .foot-brand{font-family:"Cinzel Decorative",serif;font-size:1.4rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:.5em}
+  .foot-brand .crest{width:24px;height:24px;color:var(--gold)}
+  .foot-tag{color:var(--muted);font-weight:300;margin-top:14px;max-width:34ch}
+  .foot-cols{display:flex;gap:clamp(40px,7vw,90px);flex-wrap:wrap}
+  .foot-col h4{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .foot-col a{display:block;color:var(--muted);padding:5px 0;font-size:.92rem;transition:color .35s var(--ease)}
+  .foot-col a:hover{color:var(--text)}
+  .foot-bottom{margin-top:clamp(40px,6vw,70px);padding-top:26px;border-top:1px solid var(--hair);
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;color:var(--muted);font-size:.8rem}
+
+  /* ============ RESPONSIVE NAV ============ */
+  @media(max-width:860px){
+    .nav-links,.nav-cta{display:none}
+    .burger{display:block}
+    .nav-inner{padding-right:6px}
+  }
+
+  /* ============ REDUCED MOTION ============ */
   @media (prefers-reduced-motion:reduce){
-    *{animation:none!important}
-    .title-wrap,.castle-wrap{opacity:1;transform:none}
-    .gate-glow,.gate-core{opacity:1}
-    .beam{opacity:.5}
+    *{animation:none!important;scroll-behavior:auto!important}
+    .title-wrap,.castle-wrap,.hero-cta,.scroll-hint{opacity:1;transform:none}
+    .gate-glow,.gate-core{opacity:1}.beam{opacity:.5}
     .door-left,.door-right{transform:scaleX(.05)}
+    .reveal{opacity:1;transform:none;filter:none}
+    .marquee-track{animation:none}
+    .work-card:nth-child(even),.work-card:nth-child(even).reveal.in{transform:none}
+  }
+  @media (prefers-reduced-transparency:reduce){
+    .nav.scrolled .nav-inner,.mobile-menu,.burger{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,7,12,.96)}
   }
 </style>
 </head>
 <body>
-  <div class="scene">
-    <div class="sky"></div>
-    <div class="moon"></div>
-    <div class="stars"></div>
-    <div class="mist"></div>
-    <div class="vignette"></div>
+  <div class="grain" aria-hidden="true"></div>
 
-    <!-- ===== TITLE ===== -->
-    <div class="title-wrap">
-      <div class="kicker">— By Royal Decree —</div>
-      <h1 class="title">Empire Studios</h1>
-      <svg class="flourish" viewBox="0 0 360 22" fill="none" aria-hidden="true">
-        <path d="M180 11 l16 -7 -16 7 16 7z" fill="currentColor"/>
-        <circle cx="180" cy="11" r="3.2" fill="currentColor"/>
-        <path d="M176 11 H40" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M184 11 H320" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M40 11 l-10 -5 0 10z" fill="currentColor"/>
-        <path d="M320 11 l10 -5 0 10z" fill="currentColor"/>
-        <circle cx="26" cy="11" r="2.4" fill="currentColor"/>
-        <circle cx="334" cy="11" r="2.4" fill="currentColor"/>
-      </svg>
-    </div>
+  <!-- ===== NAV ===== -->
+  <header class="nav" id="nav">
+    <nav class="nav-inner">
+      <a href="#top" class="brand" aria-label="Empire Studios home">
+        <svg class="crest" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 21h18M5 21V9l3 2 4-6 4 6 3-2v12" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+        Empire
+      </a>
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#houses">Houses</a>
+        <a href="#process">Process</a>
+        <a href="#studio">Studio</a>
+      </div>
+      <a href="#commission" class="btn btn-primary nav-cta">Commission
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
 
-    <!-- ===== CASTLE WITH OPENING GATES ===== -->
-    <div class="castle-wrap">
-      <svg class="castle" viewBox="0 0 460 440" role="img"
-           aria-label="A grand empire castle with golden gates swinging open to reveal warm light.">
-        <defs>
-          <linearGradient id="stoneFront" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#574737"/><stop offset="1" stop-color="#2A2118"/>
-          </linearGradient>
-          <linearGradient id="stoneTower" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#63513E"/><stop offset=".55" stop-color="#473829"/><stop offset="1" stop-color="#2E2419"/>
-          </linearGradient>
-          <linearGradient id="stoneDark" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#3C3022"/><stop offset="1" stop-color="#211a12"/>
-          </linearGradient>
-          <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#9A3A2E"/><stop offset=".5" stop-color="#7A2A22"/><stop offset="1" stop-color="#521914"/>
-          </linearGradient>
-          <linearGradient id="roofKeep" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#A8412F"/><stop offset=".5" stop-color="#822C22"/><stop offset="1" stop-color="#561a14"/>
-          </linearGradient>
-          <radialGradient id="glow" cx="50%" cy="62%" r="62%">
-            <stop offset="0" stop-color="#FFF6DA"/><stop offset=".35" stop-color="#FBE3A0"/>
-            <stop offset=".7" stop-color="#E0A93C"/><stop offset="1" stop-color="#7d5410"/>
-          </radialGradient>
-          <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#6E4D24"/><stop offset=".5" stop-color="#5A3D1B"/><stop offset="1" stop-color="#3E2912"/>
-          </linearGradient>
-          <linearGradient id="flag" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#F4D88A"/><stop offset="1" stop-color="#C8962A"/>
-          </linearGradient>
-          <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="7"/>
-          </filter>
-          <filter id="softer" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="16"/>
-          </filter>
-          <clipPath id="gateClip">
-            <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z"/>
-          </clipPath>
-        </defs>
-
-        <!-- ground -->
-        <ellipse cx="230" cy="416" rx="230" ry="20" fill="#0b0805" opacity=".75"/>
-        <rect x="20" y="405" width="420" height="20" fill="url(#stoneDark)"/>
-
-        <!-- ===== BACK CURTAIN WALL ===== -->
-        <rect x="96" y="210" width="268" height="196" fill="url(#stoneDark)"/>
-        <g fill="url(#stoneDark)">
-          <rect x="96" y="198" width="20" height="16"/><rect x="128" y="198" width="20" height="16"/>
-          <rect x="160" y="198" width="20" height="16"/><rect x="280" y="198" width="20" height="16"/>
-          <rect x="312" y="198" width="20" height="16"/><rect x="344" y="198" width="20" height="16"/>
-        </g>
-
-        <!-- ===== OUTER TOWERS ===== -->
-        <!-- left -->
-        <g>
-          <rect x="40" y="150" width="70" height="256" fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2"/>
-          <g fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2">
-            <rect x="40" y="136" width="16" height="18"/><rect x="63" y="136" width="16" height="18"/><rect x="86" y="136" width="18" height="18"/>
-          </g>
-          <path d="M34 136 L75 84 L116 136 Z" fill="url(#roof)" stroke="#1c150e" stroke-width="2"/>
-          <line x1="75" y1="84" x2="75" y2="54" stroke="#C8962A" stroke-width="2.5"/>
-          <path d="M75 56 L104 62 L75 72 Z" fill="url(#flag)"/>
-        </g>
-        <!-- right -->
-        <g>
-          <rect x="350" y="150" width="70" height="256" fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2"/>
-          <g fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2">
-            <rect x="356" y="136" width="18" height="18"/><rect x="381" y="136" width="16" height="18"/><rect x="404" y="136" width="16" height="18"/>
-          </g>
-          <path d="M344 136 L385 84 L426 136 Z" fill="url(#roof)" stroke="#1c150e" stroke-width="2"/>
-          <line x1="385" y1="84" x2="385" y2="54" stroke="#C8962A" stroke-width="2.5"/>
-          <path d="M385 56 L356 62 L385 72 Z" fill="url(#flag)"/>
-        </g>
-
-        <!-- tower windows (glowing) -->
-        <g class="light-flicker">
-          <g fill="url(#glow)" filter="url(#soft)" opacity=".9">
-            <rect x="60" y="186" width="14" height="22" rx="7"/><rect x="60" y="240" width="14" height="22" rx="7"/>
-            <rect x="370" y="186" width="14" height="22" rx="7"/><rect x="370" y="240" width="14" height="22" rx="7"/>
-          </g>
-          <g fill="#FFF0C0">
-            <rect x="63" y="189" width="8" height="16" rx="4"/><rect x="63" y="243" width="8" height="16" rx="4"/>
-            <rect x="373" y="189" width="8" height="16" rx="4"/><rect x="373" y="243" width="8" height="16" rx="4"/>
-          </g>
-        </g>
-
-        <!-- ===== CENTRAL KEEP ===== -->
-        <rect x="150" y="118" width="160" height="288" fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2"/>
-        <g fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2">
-          <rect x="150" y="104" width="20" height="18"/><rect x="182" y="104" width="20" height="18"/>
-          <rect x="214" y="104" width="20" height="18"/><rect x="258" y="104" width="20" height="18"/>
-          <rect x="290" y="104" width="20" height="18"/>
-        </g>
-        <path d="M142 104 L230 40 L318 104 Z" fill="url(#roofKeep)" stroke="#1c150e" stroke-width="2"/>
-        <path d="M142 104 L230 40 L236 44 L156 104 Z" fill="#fff" opacity=".06"/>
-        <line x1="230" y1="40" x2="230" y2="6" stroke="#C8962A" stroke-width="3"/>
-        <circle cx="230" cy="8" r="3.5" fill="#F4D88A"/>
-        <path d="M230 12 L276 20 L230 34 Z" fill="url(#flag)"/>
-
-        <!-- keep windows -->
-        <g class="light-flicker">
-          <g fill="url(#glow)" filter="url(#soft)" opacity=".85">
-            <rect x="176" y="150" width="16" height="26" rx="8"/><rect x="268" y="150" width="16" height="26" rx="8"/>
-            <rect x="222" y="142" width="16" height="26" rx="8"/>
-          </g>
-          <g fill="#FFF0C0">
-            <rect x="179" y="153" width="10" height="20" rx="5"/><rect x="271" y="153" width="10" height="20" rx="5"/>
-            <rect x="225" y="145" width="10" height="20" rx="5"/>
-          </g>
-        </g>
-
-        <!-- subtle stone courses -->
-        <g stroke="#1c150e" stroke-width="1" opacity=".25">
-          <line x1="150" y1="170" x2="310" y2="170"/><line x1="150" y1="210" x2="310" y2="210"/>
-          <line x1="150" y1="250" x2="310" y2="250"/><line x1="150" y1="290" x2="310" y2="290"/>
-          <line x1="40" y1="200" x2="110" y2="200"/><line x1="40" y1="250" x2="110" y2="250"/><line x1="40" y1="300" x2="110" y2="300"/>
-          <line x1="350" y1="200" x2="420" y2="200"/><line x1="350" y1="250" x2="420" y2="250"/><line x1="350" y1="300" x2="420" y2="300"/>
-        </g>
-
-        <!-- ===== GATEHOUSE ===== -->
-        <rect x="172" y="250" width="116" height="156" fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2"/>
-        <g fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2">
-          <rect x="172" y="238" width="18" height="16"/><rect x="201" y="238" width="18" height="16"/>
-          <rect x="241" y="238" width="18" height="16"/><rect x="270" y="238" width="18" height="16"/>
-        </g>
-
-        <!-- gateway recess (dark) -->
-        <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z" fill="#0d0a06"/>
-
-        <!-- golden light pouring out -->
-        <g class="gate-glow" clip-path="url(#gateClip)">
-          <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z" fill="url(#glow)"/>
-          <g class="gate-core light-flicker">
-            <ellipse cx="230" cy="330" rx="60" ry="80" fill="#FFF3CC" filter="url(#softer)" opacity=".9"/>
-            <ellipse cx="230" cy="356" rx="26" ry="50" fill="#FFFBEF" filter="url(#soft)"/>
-          </g>
-        </g>
-
-        <!-- light beam spilling onto the ground -->
-        <path class="beam light-flicker" d="M188 406 L150 430 L310 430 L272 406 Z" fill="url(#glow)" filter="url(#soft)"/>
-
-        <!-- ===== THE TWO DOORS (swing open) ===== -->
-        <g class="door door-left">
-          <path d="M186 406 L186 300 A44 44 0 0 1 230 256 L230 406 Z" fill="url(#wood)" stroke="#2a1c0c" stroke-width="2"/>
-          <g stroke="#2a1c0c" stroke-width="1.3" opacity=".7">
-            <line x1="200" y1="278" x2="200" y2="404"/><line x1="214" y1="266" x2="214" y2="404"/>
-          </g>
-          <g fill="#3a2913" opacity=".9">
-            <rect x="190" y="300" width="40" height="7" rx="2"/><rect x="190" y="356" width="40" height="7" rx="2"/>
-          </g>
-          <g fill="#E8C36B">
-            <circle cx="193" cy="304" r="2"/><circle cx="223" cy="304" r="2"/>
-            <circle cx="193" cy="360" r="2"/><circle cx="223" cy="360" r="2"/>
-          </g>
-          <circle cx="224" cy="338" r="5" fill="none" stroke="#3a2913" stroke-width="3"/>
-        </g>
-        <g class="door door-right">
-          <path d="M274 406 L274 300 A44 44 0 0 0 230 256 L230 406 Z" fill="url(#wood)" stroke="#2a1c0c" stroke-width="2"/>
-          <g stroke="#2a1c0c" stroke-width="1.3" opacity=".7">
-            <line x1="260" y1="278" x2="260" y2="404"/><line x1="246" y1="266" x2="246" y2="404"/>
-          </g>
-          <g fill="#3a2913" opacity=".9">
-            <rect x="230" y="300" width="40" height="7" rx="2"/><rect x="230" y="356" width="40" height="7" rx="2"/>
-          </g>
-          <g fill="#E8C36B">
-            <circle cx="237" cy="304" r="2"/><circle cx="267" cy="304" r="2"/>
-            <circle cx="237" cy="360" r="2"/><circle cx="267" cy="360" r="2"/>
-          </g>
-          <circle cx="236" cy="338" r="5" fill="none" stroke="#3a2913" stroke-width="3"/>
-        </g>
-
-        <!-- arch frame on top -->
-        <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406"
-              fill="none" stroke="#1c150e" stroke-width="6"/>
-        <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406"
-              fill="none" stroke="#C8962A" stroke-width="2" opacity=".55"/>
-        <!-- keystone -->
-        <path d="M222 252 L238 252 L234 270 L226 270 Z" fill="#E8C36B" stroke="#1c150e" stroke-width="1.2"/>
-      </svg>
-    </div>
+  <!-- mobile overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#work"><span>01</span>Work</a>
+    <a href="#houses"><span>02</span>Houses</a>
+    <a href="#process"><span>03</span>Process</a>
+    <a href="#studio"><span>04</span>Studio</a>
+    <a href="#commission"><span>05</span>Commission</a>
   </div>
+
+  <main id="top">
+    <!-- ===== HERO SCENE ===== -->
+    <section class="scene" aria-label="Empire Studios">
+      <div class="sky"></div><div class="moon"></div><div class="stars"></div>
+      <div class="mist"></div><div class="vignette"></div>
+
+      <div class="title-wrap">
+        <span class="eyebrow">Founded on ambition</span>
+        <h1 class="title">Empire Studios</h1>
+        <p class="hero-sub">A creative empire forging <b>brands, films, and digital worlds</b> with the precision of a mint.</p>
+      </div>
+
+      <div class="castle-wrap">
+        <svg class="castle" viewBox="0 0 460 440" role="img"
+             aria-label="A grand empire castle with golden gates swinging open to reveal warm light.">
+          <defs>
+            <linearGradient id="stoneFront" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#574737"/><stop offset="1" stop-color="#2A2118"/></linearGradient>
+            <linearGradient id="stoneTower" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#63513E"/><stop offset=".55" stop-color="#473829"/><stop offset="1" stop-color="#2E2419"/></linearGradient>
+            <linearGradient id="stoneDark" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3C3022"/><stop offset="1" stop-color="#211a12"/></linearGradient>
+            <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#9A3A2E"/><stop offset=".5" stop-color="#7A2A22"/><stop offset="1" stop-color="#521914"/></linearGradient>
+            <linearGradient id="roofKeep" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#A8412F"/><stop offset=".5" stop-color="#822C22"/><stop offset="1" stop-color="#561a14"/></linearGradient>
+            <radialGradient id="glow" cx="50%" cy="62%" r="62%">
+              <stop offset="0" stop-color="#FFF6DA"/><stop offset=".35" stop-color="#FBE3A0"/>
+              <stop offset=".7" stop-color="#E0A93C"/><stop offset="1" stop-color="#7d5410"/></radialGradient>
+            <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6E4D24"/><stop offset=".5" stop-color="#5A3D1B"/><stop offset="1" stop-color="#3E2912"/></linearGradient>
+            <linearGradient id="flag" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#F4D88A"/><stop offset="1" stop-color="#C8962A"/></linearGradient>
+            <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+            <filter id="softer" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="16"/></filter>
+            <clipPath id="gateClip"><path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z"/></clipPath>
+          </defs>
+          <ellipse cx="230" cy="416" rx="230" ry="20" fill="#0b0805" opacity=".75"/>
+          <rect x="20" y="405" width="420" height="20" fill="url(#stoneDark)"/>
+          <rect x="96" y="210" width="268" height="196" fill="url(#stoneDark)"/>
+          <g fill="url(#stoneDark)">
+            <rect x="96" y="198" width="20" height="16"/><rect x="128" y="198" width="20" height="16"/>
+            <rect x="160" y="198" width="20" height="16"/><rect x="280" y="198" width="20" height="16"/>
+            <rect x="312" y="198" width="20" height="16"/><rect x="344" y="198" width="20" height="16"/></g>
+          <g>
+            <rect x="40" y="150" width="70" height="256" fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2"/>
+            <g fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2">
+              <rect x="40" y="136" width="16" height="18"/><rect x="63" y="136" width="16" height="18"/><rect x="86" y="136" width="18" height="18"/></g>
+            <path d="M34 136 L75 84 L116 136 Z" fill="url(#roof)" stroke="#1c150e" stroke-width="2"/>
+            <line x1="75" y1="84" x2="75" y2="54" stroke="#C8962A" stroke-width="2.5"/>
+            <path d="M75 56 L104 62 L75 72 Z" fill="url(#flag)"/></g>
+          <g>
+            <rect x="350" y="150" width="70" height="256" fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2"/>
+            <g fill="url(#stoneTower)" stroke="#1c150e" stroke-width="2">
+              <rect x="356" y="136" width="18" height="18"/><rect x="381" y="136" width="16" height="18"/><rect x="404" y="136" width="16" height="18"/></g>
+            <path d="M344 136 L385 84 L426 136 Z" fill="url(#roof)" stroke="#1c150e" stroke-width="2"/>
+            <line x1="385" y1="84" x2="385" y2="54" stroke="#C8962A" stroke-width="2.5"/>
+            <path d="M385 56 L356 62 L385 72 Z" fill="url(#flag)"/></g>
+          <g class="light-flicker">
+            <g fill="url(#glow)" filter="url(#soft)" opacity=".9">
+              <rect x="60" y="186" width="14" height="22" rx="7"/><rect x="60" y="240" width="14" height="22" rx="7"/>
+              <rect x="370" y="186" width="14" height="22" rx="7"/><rect x="370" y="240" width="14" height="22" rx="7"/></g>
+            <g fill="#FFF0C0">
+              <rect x="63" y="189" width="8" height="16" rx="4"/><rect x="63" y="243" width="8" height="16" rx="4"/>
+              <rect x="373" y="189" width="8" height="16" rx="4"/><rect x="373" y="243" width="8" height="16" rx="4"/></g></g>
+          <rect x="150" y="118" width="160" height="288" fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2"/>
+          <g fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2">
+            <rect x="150" y="104" width="20" height="18"/><rect x="182" y="104" width="20" height="18"/>
+            <rect x="214" y="104" width="20" height="18"/><rect x="258" y="104" width="20" height="18"/>
+            <rect x="290" y="104" width="20" height="18"/></g>
+          <path d="M142 104 L230 40 L318 104 Z" fill="url(#roofKeep)" stroke="#1c150e" stroke-width="2"/>
+          <path d="M142 104 L230 40 L236 44 L156 104 Z" fill="#fff" opacity=".06"/>
+          <line x1="230" y1="40" x2="230" y2="6" stroke="#C8962A" stroke-width="3"/>
+          <circle cx="230" cy="8" r="3.5" fill="#F4D88A"/>
+          <path d="M230 12 L276 20 L230 34 Z" fill="url(#flag)"/>
+          <g class="light-flicker">
+            <g fill="url(#glow)" filter="url(#soft)" opacity=".85">
+              <rect x="176" y="150" width="16" height="26" rx="8"/><rect x="268" y="150" width="16" height="26" rx="8"/>
+              <rect x="222" y="142" width="16" height="26" rx="8"/></g>
+            <g fill="#FFF0C0">
+              <rect x="179" y="153" width="10" height="20" rx="5"/><rect x="271" y="153" width="10" height="20" rx="5"/>
+              <rect x="225" y="145" width="10" height="20" rx="5"/></g></g>
+          <g stroke="#1c150e" stroke-width="1" opacity=".25">
+            <line x1="150" y1="170" x2="310" y2="170"/><line x1="150" y1="210" x2="310" y2="210"/>
+            <line x1="150" y1="250" x2="310" y2="250"/><line x1="150" y1="290" x2="310" y2="290"/>
+            <line x1="40" y1="200" x2="110" y2="200"/><line x1="40" y1="250" x2="110" y2="250"/><line x1="40" y1="300" x2="110" y2="300"/>
+            <line x1="350" y1="200" x2="420" y2="200"/><line x1="350" y1="250" x2="420" y2="250"/><line x1="350" y1="300" x2="420" y2="300"/></g>
+          <rect x="172" y="250" width="116" height="156" fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2"/>
+          <g fill="url(#stoneFront)" stroke="#1c150e" stroke-width="2">
+            <rect x="172" y="238" width="18" height="16"/><rect x="201" y="238" width="18" height="16"/>
+            <rect x="241" y="238" width="18" height="16"/><rect x="270" y="238" width="18" height="16"/></g>
+          <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z" fill="#0d0a06"/>
+          <g class="gate-glow" clip-path="url(#gateClip)">
+            <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406 Z" fill="url(#glow)"/>
+            <g class="gate-core light-flicker">
+              <ellipse cx="230" cy="330" rx="60" ry="80" fill="#FFF3CC" filter="url(#softer)" opacity=".9"/>
+              <ellipse cx="230" cy="356" rx="26" ry="50" fill="#FFFBEF" filter="url(#soft)"/></g></g>
+          <path class="beam light-flicker" d="M188 406 L150 430 L310 430 L272 406 Z" fill="url(#glow)" filter="url(#soft)"/>
+          <g class="door door-left">
+            <path d="M186 406 L186 300 A44 44 0 0 1 230 256 L230 406 Z" fill="url(#wood)" stroke="#2a1c0c" stroke-width="2"/>
+            <g stroke="#2a1c0c" stroke-width="1.3" opacity=".7"><line x1="200" y1="278" x2="200" y2="404"/><line x1="214" y1="266" x2="214" y2="404"/></g>
+            <g fill="#3a2913" opacity=".9"><rect x="190" y="300" width="40" height="7" rx="2"/><rect x="190" y="356" width="40" height="7" rx="2"/></g>
+            <g fill="#E8C36B"><circle cx="193" cy="304" r="2"/><circle cx="223" cy="304" r="2"/><circle cx="193" cy="360" r="2"/><circle cx="223" cy="360" r="2"/></g>
+            <circle cx="224" cy="338" r="5" fill="none" stroke="#3a2913" stroke-width="3"/></g>
+          <g class="door door-right">
+            <path d="M274 406 L274 300 A44 44 0 0 0 230 256 L230 406 Z" fill="url(#wood)" stroke="#2a1c0c" stroke-width="2"/>
+            <g stroke="#2a1c0c" stroke-width="1.3" opacity=".7"><line x1="260" y1="278" x2="260" y2="404"/><line x1="246" y1="266" x2="246" y2="404"/></g>
+            <g fill="#3a2913" opacity=".9"><rect x="230" y="300" width="40" height="7" rx="2"/><rect x="230" y="356" width="40" height="7" rx="2"/></g>
+            <g fill="#E8C36B"><circle cx="237" cy="304" r="2"/><circle cx="267" cy="304" r="2"/><circle cx="237" cy="360" r="2"/><circle cx="267" cy="360" r="2"/></g>
+            <circle cx="236" cy="338" r="5" fill="none" stroke="#3a2913" stroke-width="3"/></g>
+          <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406" fill="none" stroke="#1c150e" stroke-width="6"/>
+          <path d="M186 406 L186 300 A44 44 0 0 1 274 300 L274 406" fill="none" stroke="#C8962A" stroke-width="2" opacity=".55"/>
+          <path d="M222 252 L238 252 L234 270 L226 270 Z" fill="#E8C36B" stroke="#1c150e" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <div class="hero-cta">
+        <span class="magnetic" data-magnetic>
+          <a href="#commission" class="btn btn-primary">Commission
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        </span>
+        <a href="#work" class="btn btn-ghost">View the vault
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+      </div>
+
+      <div class="scroll-hint"><span>Enter</span><span class="line"></span></div>
+    </section>
+
+    <!-- ===== MARQUEE (one per page) ===== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span class="marquee-item">Brand Systems</span><span class="marquee-item">Film &amp; Motion</span>
+        <span class="marquee-item">Interactive</span><span class="marquee-item">Spatial Design</span>
+        <span class="marquee-item">Sound &amp; Score</span><span class="marquee-item">Art Direction</span>
+        <span class="marquee-item">Brand Systems</span><span class="marquee-item">Film &amp; Motion</span>
+        <span class="marquee-item">Interactive</span><span class="marquee-item">Spatial Design</span>
+        <span class="marquee-item">Sound &amp; Score</span><span class="marquee-item">Art Direction</span>
+      </div>
+    </div>
+
+    <!-- ===== MANIFESTO ===== -->
+    <section class="band manifesto" id="studio">
+      <div class="wrap">
+        <h2 class="big reveal">We build brand worlds with the weight of <i>permanence</i> and the polish of obsession.</h2>
+        <div class="meta">
+          <p class="reveal" style="--rd:80ms">Empire Studios is a multidisciplinary house. Strategy, identity, film, and interactive product, engineered under one roof, held to a single standard.</p>
+          <div class="stat-row reveal" style="--rd:160ms">
+            <div class="stat"><div class="n">14</div><div class="l">Years building</div></div>
+            <div class="stat"><div class="n">90+</div><div class="l">Brands forged</div></div>
+            <div class="stat"><div class="n">22</div><div class="l">Awards won</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOUSES (bento) ===== -->
+    <section class="band" id="houses" style="padding-top:0">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow reveal">The five houses</span>
+          <h2 class="display reveal" style="--rd:80ms;margin-top:18px">Disciplines under one banner.</h2>
+        </div>
+        <div class="houses-grid">
+          <article class="bezel house media feature reveal">
+            <div class="core">
+              <div class="img" style="background-image:url('https://picsum.photos/seed/empire-brand-identity/900/1100?grayscale')"></div>
+              <div class="scrim"></div>
+              <div class="h-body" style="display:flex;flex-direction:column;height:100%">
+                <div class="h-top"><span>Flagship</span><span class="idx">I</span></div>
+                <h3 style="margin-top:auto">Brand &amp; Identity</h3>
+                <p style="color:rgba(241,231,213,.8)">Marks, systems, and voice built to be carved in stone, then bent for every surface they live on.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="bezel house tall reveal" style="--rd:80ms">
+            <div class="core">
+              <div class="h-top"><span>House II</span>
+                <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM4 9h16M9 5v14" stroke="currentColor" stroke-width="1.3"/></svg>
+              </div>
+              <h3>Film &amp; Motion</h3>
+              <p>Cinematic stories, title work, and motion language that gives a brand its pulse.</p>
+            </div>
+          </article>
+
+          <article class="bezel house tall reveal" style="--rd:140ms">
+            <div class="core">
+              <div class="h-top"><span>House III</span>
+                <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M4 6h16v10H4zM2 20h20M9 11l3 2 3-2" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </div>
+              <h3>Interactive</h3>
+              <p>Sites and products that move like physics. Engineered for speed, tuned for feel.</p>
+            </div>
+          </article>
+
+          <article class="bezel house wide reveal" style="--rd:80ms">
+            <div class="core">
+              <div class="h-top"><span>House IV</span>
+                <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8l9 5 9-5zM3 13l9 5 9-5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              </div>
+              <h3>Spatial &amp; Environment</h3>
+              <p>Installations, retail, and stage. Brands you can walk through, not just scroll past.</p>
+            </div>
+          </article>
+
+          <article class="bezel house third reveal" style="--rd:160ms">
+            <div class="core">
+              <div class="h-top"><span>House V</span>
+                <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M4 13a4 4 0 1 0 4-4V4l10-1v9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="14" r="3" stroke="currentColor" stroke-width="1.3"/></svg>
+              </div>
+              <h3>Sound &amp; Score</h3>
+              <p>Sonic identity, scoring, and mix. The half of brand memory most studios forget.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SELECTED WORK ===== -->
+    <section class="band" id="work" style="padding-top:0">
+      <div class="wrap">
+        <div class="sec-head" style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;max-width:none">
+          <h2 class="display reveal">Selected work.</h2>
+          <p class="lede reveal" style="--rd:80ms;max-width:36ch;margin-top:0">A small vault of recent commissions. The rest opens by invitation.</p>
+        </div>
+        <div class="work-grid">
+          <article class="work-card reveal">
+            <div class="work-frame"><div class="work-img"><div class="bg" style="background-image:url('https://picsum.photos/seed/empire-aurum-spirits/1200/900?grayscale')"></div><div class="tint"></div></div></div>
+            <div class="work-meta"><div><h3>Aurum Spirits</h3><div class="yr">2025</div></div><span class="cat">Brand · Film</span></div>
+          </article>
+          <article class="work-card reveal" style="--rd:80ms">
+            <div class="work-frame"><div class="work-img"><div class="bg" style="background-image:url('https://picsum.photos/seed/empire-meridian-bank/1200/900?grayscale')"></div><div class="tint"></div></div></div>
+            <div class="work-meta"><div><h3>Meridian</h3><div class="yr">2025</div></div><span class="cat">Identity · Web</span></div>
+          </article>
+          <article class="work-card reveal">
+            <div class="work-frame"><div class="work-img"><div class="bg" style="background-image:url('https://picsum.photos/seed/empire-atlas-arch/1200/900?grayscale')"></div><div class="tint"></div></div></div>
+            <div class="work-meta"><div><h3>Atlas Pavilion</h3><div class="yr">2024</div></div><span class="cat">Spatial</span></div>
+          </article>
+          <article class="work-card reveal" style="--rd:80ms">
+            <div class="work-frame"><div class="work-img"><div class="bg" style="background-image:url('https://picsum.photos/seed/empire-noctua-studio/1200/900?grayscale')"></div><div class="tint"></div></div></div>
+            <div class="work-meta"><div><h3>Noctua</h3><div class="yr">2024</div></div><span class="cat">Interactive · Sound</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROCESS ===== -->
+    <section class="band" id="process" style="padding-top:0">
+      <div class="wrap">
+        <h2 class="display reveal">How an empire is built.</h2>
+        <div class="process-list">
+          <div class="step reveal"><div class="num">01</div><h3>Audience &amp; Ambition</h3><p>We map who you serve, who you fight, and the territory worth taking. No work starts without a clear-eyed read of the room.</p></div>
+          <div class="step reveal" style="--rd:60ms"><div class="num">02</div><h3>The Decree</h3><p>Strategy becomes a single, defensible direction. One idea sharp enough to hang every decision on.</p></div>
+          <div class="step reveal" style="--rd:120ms"><div class="num">03</div><h3>The Forge</h3><p>Design, film, and build, made in parallel by senior hands. We prototype in the real medium early, not in slideware.</p></div>
+          <div class="step reveal" style="--rd:180ms"><div class="num">04</div><h3>Coronation</h3><p>We launch, instrument, and stay close. The work is judged by what it does in the world, not in the deck.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CLOSING / COMMISSION ===== -->
+    <section class="band closing" id="commission">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 class="reveal">Ready to build something that lasts?</h2>
+        <p class="reveal" style="--rd:80ms">The gates are open. Bring an ambition worthy of one, and we will engineer the rest.</p>
+        <div class="reveal" style="--rd:140ms;display:flex;justify-content:center">
+          <span class="magnetic" data-magnetic>
+            <a href="mailto:studio@empire.studio" class="btn btn-primary" style="font-size:1.02rem;padding:.95rem .95rem .95rem 1.8rem">Commission
+              <span class="ico" style="width:2.3rem;height:2.3rem"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <div class="foot-brand">
+            <svg class="crest" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h18M5 21V9l3 2 4-6 4 6 3-2v12" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Empire Studios
+          </div>
+          <p class="foot-tag">A creative empire forging brands, films, and digital worlds. By royal decree, the gates are open.</p>
+        </div>
+        <div class="foot-cols">
+          <div class="foot-col"><h4>Studio</h4><a href="#houses">Houses</a><a href="#work">Work</a><a href="#process">Process</a></div>
+          <div class="foot-col"><h4>Connect</h4><a href="mailto:studio@empire.studio">studio@empire.studio</a><a href="#commission">Commission</a><a href="#top">Back to top</a></div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>&copy; 2026 Empire Studios. All rights reserved.</span>
+        <span>Crafted in the golden age.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // nav scroll state
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive:true});
+
+    // mobile menu
+    const burger = document.getElementById('burger');
+    const menu = document.getElementById('mobileMenu');
+    const toggleMenu = (open) => {
+      document.body.classList.toggle('menu-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    burger.addEventListener('click', () => toggleMenu(!document.body.classList.contains('menu-open')));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+
+    // scroll reveal
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, {threshold:0.16, rootMargin:'0px 0px -8% 0px'});
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    }
+
+    // magnetic CTAs (transform only, outside render churn)
+    if (!reduce && window.matchMedia('(pointer:fine)').matches) {
+      document.querySelectorAll('[data-magnetic]').forEach(el => {
+        let raf = null;
+        const move = (e) => {
+          const r = el.getBoundingClientRect();
+          const x = (e.clientX - (r.left + r.width/2)) * 0.28;
+          const y = (e.clientY - (r.top + r.height/2)) * 0.34;
+          if (raf) cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => { el.style.setProperty('--mx', x.toFixed(1)+'px'); el.style.setProperty('--my', y.toFixed(1)+'px'); });
+        };
+        const reset = () => { el.style.setProperty('--mx','0px'); el.style.setProperty('--my','0px'); };
+        el.addEventListener('pointermove', move);
+        el.addEventListener('pointerleave', reset);
+      });
+    }
+  </script>
 </body>
 </html>
