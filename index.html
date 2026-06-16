@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aurelmark — The Empire Whose Gates Stand Open</title>
+<meta name="description" content="Aurelmark, the empire of open gates. A realm of stone keeps, golden courts, and open roads. Enter the gates." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Dark stone + imperial gold — heritage/luxury palette */
+    --bg-deep: #14110E;
+    --bg-base: #1A1612;
+    --surface: #221C16;
+    --elevated: #2B241C;
+    --gold: #C8962A;
+    --gold-bright: #E8C36B;
+    --gold-deep: #8A6515;
+    --parchment: #F6EFDF;
+    --fg: #F1E7D5;
+    --fg-muted: #B6A88C;
+    --fg-dim: #8C7E66;
+    --border: rgba(200, 150, 42, 0.22);
+    --border-soft: rgba(200, 150, 42, 0.12);
+    --destructive: #C24A3A;
+
+    --maxw: 1200px;
+    --radius: 4px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-lg: 0 30px 80px -30px rgba(0,0,0,0.8);
+
+    --font-display: "Cormorant", "Cormorant Garamond", Georgia, serif;
+    --font-body: "Montserrat", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-deep);
+    color: var(--fg);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold); color: var(--bg-deep); }
+
+  a { color: inherit; text-decoration: none; }
+  img, svg { display: block; max-width: 100%; }
+
+  .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: "";
+    width: 28px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .eyebrow::after { background: linear-gradient(90deg, var(--gold), transparent); }
+  .eyebrow.left::before { display: none; }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.08; letter-spacing: 0.01em; }
+
+  .display {
+    font-size: clamp(3rem, 9vw, 7rem);
+    font-weight: 600;
+    line-height: 0.98;
+  }
+  .display em { font-style: italic; color: var(--gold-bright); font-weight: 500; }
+
+  .section-title { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+
+  .lead { color: var(--fg-muted); font-size: clamp(1rem, 1.4vw, 1.18rem); max-width: 60ch; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6em;
+    font-family: var(--font-body); font-weight: 600;
+    font-size: 0.82rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 16px 30px; cursor: pointer; border-radius: var(--radius);
+    border: 1px solid var(--gold); transition: all 0.3s var(--ease);
+    min-height: 48px;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #211a0c; border-color: var(--gold-bright);
+    box-shadow: 0 10px 30px -12px rgba(200,150,42,0.6);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 38px -12px rgba(200,150,42,0.75); filter: brightness(1.06); }
+  .btn-ghost { background: transparent; color: var(--gold-bright); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--gold); background: rgba(200,150,42,0.08); transform: translateY(-2px); }
+  .btn:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 3px; }
+
+  /* ---------- Nav ---------- */
+  header.nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    transition: background 0.4s var(--ease), border-color 0.4s var(--ease), backdrop-filter 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  header.nav.scrolled {
+    background: rgba(20, 17, 14, 0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .crest { width: 34px; height: 34px; color: var(--gold); }
+  .brand b { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: 0.04em; }
+  .brand span { color: var(--gold-bright); }
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a.link {
+    font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-muted); transition: color 0.25s; position: relative;
+  }
+  .nav-links a.link::after {
+    content: ""; position: absolute; left: 0; bottom: -7px; width: 0; height: 1px;
+    background: var(--gold); transition: width 0.3s var(--ease);
+  }
+  .nav-links a.link:hover { color: var(--fg); }
+  .nav-links a.link:hover::after { width: 100%; }
+  .nav-cta { padding: 11px 22px; min-height: 0; }
+  .nav-toggle { display: none; background: none; border: 1px solid var(--border); color: var(--gold-bright); padding: 8px 12px; border-radius: var(--radius); cursor: pointer; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; padding: 120px 0 60px; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; }
+  .hero-bg .sky {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 80% at 50% 8%, rgba(232,195,107,0.14), transparent 55%),
+      radial-gradient(90% 60% at 50% 100%, rgba(200,150,42,0.10), transparent 60%),
+      linear-gradient(180deg, #0E0B08 0%, #1A1410 45%, #221913 100%);
+  }
+  /* drifting motes */
+  .motes span {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: var(--gold-bright); opacity: 0.5; animation: drift 14s linear infinite;
+    box-shadow: 0 0 8px 1px rgba(232,195,107,0.6);
+  }
+  @keyframes drift {
+    0% { transform: translateY(20px) translateX(0); opacity: 0; }
+    15% { opacity: 0.6; }
+    100% { transform: translateY(-120px) translateX(24px); opacity: 0; }
+  }
+
+  .hero-inner { position: relative; z-index: 2; width: 100%; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+  .hero-copy .display { margin: 18px 0 22px; }
+  .hero-copy .lead { margin-bottom: 36px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero-meta { display: flex; gap: 34px; margin-top: 46px; flex-wrap: wrap; }
+  .hero-meta div b { display: block; font-family: var(--font-display); font-size: 2rem; color: var(--gold-bright); line-height: 1; }
+  .hero-meta div small { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-dim); }
+
+  .castle-stage { position: relative; display: flex; justify-content: center; align-items: flex-end; }
+  .castle-glow { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); width: 75%; height: 60%; background: radial-gradient(ellipse at center, rgba(232,195,107,0.35), transparent 70%); filter: blur(20px); z-index: 0; }
+  .castle { position: relative; z-index: 1; width: min(100%, 460px); filter: drop-shadow(0 30px 40px rgba(0,0,0,0.55)); }
+
+  /* gate glow pulse */
+  .gate-light { animation: gateGlow 4s ease-in-out infinite; transform-origin: center; }
+  @keyframes gateGlow { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+  .scroll-cue { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--fg-dim); font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; }
+  .scroll-cue .line { width: 1px; height: 42px; background: linear-gradient(var(--gold), transparent); animation: cue 2s ease-in-out infinite; }
+  @keyframes cue { 0%,100% { transform: scaleY(0.4); opacity: 0.5; transform-origin: top; } 50% { transform: scaleY(1); opacity: 1; transform-origin: top; } }
+
+  /* ---------- Proclamation ---------- */
+  .proclaim { border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); background: var(--bg-base); }
+  .proclaim .wrap { padding-top: 64px; padding-bottom: 64px; text-align: center; }
+  .proclaim p { font-family: var(--font-display); font-style: italic; font-size: clamp(1.6rem, 3.6vw, 2.8rem); color: var(--fg); max-width: 22ch; margin: 14px auto 0; line-height: 1.3; }
+  .proclaim p span { color: var(--gold-bright); }
+
+  /* ---------- Sections ---------- */
+  section.block { padding: clamp(72px, 11vw, 140px) 0; }
+  .section-head { max-width: 60ch; margin-bottom: 56px; }
+  .section-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+  .section-head .section-title { margin: 16px 0 18px; }
+
+  /* Pillars */
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .pillar {
+    background: linear-gradient(180deg, var(--surface), var(--bg-base));
+    border: 1px solid var(--border-soft); border-radius: var(--radius);
+    padding: 34px 26px; transition: transform 0.4s var(--ease), border-color 0.4s, box-shadow 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .pillar::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform 0.4s var(--ease); }
+  .pillar:hover { transform: translateY(-6px); border-color: var(--border); box-shadow: var(--shadow-lg); }
+  .pillar:hover::before { transform: scaleX(1); }
+  .pillar .ico { width: 46px; height: 46px; color: var(--gold-bright); margin-bottom: 22px; }
+  .pillar h3 { font-size: 1.6rem; margin-bottom: 10px; }
+  .pillar p { color: var(--fg-muted); font-size: 0.94rem; }
+
+  /* Heraldry / stats */
+  .heraldry { background: var(--bg-base); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+  .stat b { font-family: var(--font-display); font-size: clamp(2.6rem, 5vw, 4rem); color: var(--gold-bright); display: block; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat small { font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-dim); }
+  .stat span.unit { color: var(--gold); }
+
+  /* Realms grid */
+  .realms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .realm {
+    position: relative; border: 1px solid var(--border-soft); border-radius: var(--radius);
+    padding: 38px 30px; min-height: 260px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: linear-gradient(180deg, rgba(43,36,28,0.4), var(--surface));
+    overflow: hidden; transition: border-color 0.4s, transform 0.4s var(--ease);
+  }
+  .realm .pat { position: absolute; inset: 0; opacity: 0.06; color: var(--gold); pointer-events: none; }
+  .realm:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .realm .tag { font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: auto; }
+  .realm h3 { font-size: 1.9rem; margin: 18px 0 8px; }
+  .realm p { color: var(--fg-muted); font-size: 0.9rem; }
+
+  /* Chronicle / timeline */
+  .chronicle { background: var(--bg-base); border-top: 1px solid var(--border-soft); }
+  .timeline { position: relative; max-width: 760px; margin: 0 auto; padding-left: 8px; }
+  .timeline::before { content: ""; position: absolute; left: 12px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--gold), transparent); }
+  .epoch { position: relative; padding: 0 0 44px 50px; }
+  .epoch:last-child { padding-bottom: 0; }
+  .epoch .dot { position: absolute; left: 4px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-base); border: 2px solid var(--gold); box-shadow: 0 0 0 4px rgba(200,150,42,0.12); }
+  .epoch .year { font-family: var(--font-display); font-size: 1.5rem; color: var(--gold-bright); }
+  .epoch h3 { font-size: 1.3rem; margin: 2px 0 6px; }
+  .epoch p { color: var(--fg-muted); font-size: 0.92rem; }
+
+  /* Final CTA */
+  .summon { position: relative; text-align: center; overflow: hidden; }
+  .summon::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(80% 100% at 50% 100%, rgba(200,150,42,0.16), transparent 60%);
+    pointer-events: none;
+  }
+  .summon .wrap { position: relative; z-index: 1; }
+  .summon .display { margin: 20px auto 24px; max-width: 16ch; }
+  .summon .lead { margin: 0 auto 38px; }
+
+  /* Footer */
+  footer.foot { border-top: 1px solid var(--border-soft); background: var(--bg-deep); padding: 60px 0 40px; }
+  .foot-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap; }
+  .foot .brand b { font-size: 1.6rem; }
+  .foot-tag { color: var(--fg-dim); font-size: 0.86rem; max-width: 32ch; margin-top: 14px; }
+  .foot-cols { display: flex; gap: 60px; flex-wrap: wrap; }
+  .foot-col h4 { font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .foot-col a { display: block; color: var(--fg-muted); font-size: 0.88rem; padding: 5px 0; transition: color 0.2s; }
+  .foot-col a:hover { color: var(--fg); }
+  .foot-bottom { border-top: 1px solid var(--border-soft); margin-top: 44px; padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--fg-dim); font-size: 0.78rem; letter-spacing: 0.04em; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal.d1 { transition-delay: 0.08s; }
+  .reveal.d2 { transition-delay: 0.16s; }
+  .reveal.d3 { transition-delay: 0.24s; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 940px) {
+    .hero-inner { grid-template-columns: 1fr; text-align: center; }
+    .castle-stage { order: -1; margin-bottom: 10px; }
+    .hero-actions, .hero-meta, .eyebrow { justify-content: center; }
+    .castle { width: min(86%, 380px); }
+    .pillars { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 36px 20px; }
+    .realms { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex; flex-direction: column; position: absolute; top: 76px; left: 0; right: 0;
+      background: rgba(20,17,14,0.97); backdrop-filter: blur(14px); padding: 22px 24px; gap: 18px;
+      border-bottom: 1px solid var(--border); align-items: flex-start;
+    }
+    .nav-links.open .nav-cta { width: 100%; justify-content: center; }
+    .nav-toggle { display: inline-flex; }
+    .pillars, .realms { grid-template-columns: 1fr; }
+    .hero-meta { gap: 28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Aurelmark, home">
+      <svg class="crest" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2l3 5 6-2-1 6 4 3-4 3 1 6-6-2-3 5-3-5-6 2 1-6-4-3 4-3-1-6 6 2z" fill="currentColor" opacity="0.18"/>
+        <path d="M16 5l2.2 3.7 4.4-1.5-.8 4.5 3 2.3-3 2.3.8 4.5-4.4-1.5L16 27l-2.2-3.7-4.4 1.5.8-4.5-3-2.3 3-2.3-.8-4.5 4.4 1.5L16 5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+        <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
+      </svg>
+      <b>Aurel<span>mark</span></b>
+    </a>
+    <nav class="nav-links" id="navlinks" aria-label="Primary">
+      <a class="link" href="#realm">The Realm</a>
+      <a class="link" href="#provinces">Provinces</a>
+      <a class="link" href="#chronicle">Chronicle</a>
+      <a class="link" href="#summon">Enter</a>
+      <a class="btn btn-primary nav-cta" href="#summon">Open the Gates</a>
+    </nav>
+    <button class="nav-toggle" id="navtoggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navlinks">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="sky"></div>
+      <div class="motes">
+        <span style="left:12%; bottom:18%; animation-delay:0s"></span>
+        <span style="left:26%; bottom:8%; animation-delay:3s"></span>
+        <span style="left:48%; bottom:24%; animation-delay:6s"></span>
+        <span style="left:67%; bottom:12%; animation-delay:2s"></span>
+        <span style="left:82%; bottom:22%; animation-delay:5s"></span>
+        <span style="left:38%; bottom:6%; animation-delay:8s"></span>
+        <span style="left:73%; bottom:30%; animation-delay:9.5s"></span>
+      </div>
+    </div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow left reveal in">An Empire of Open Gates</span>
+        <h1 class="display reveal in d1">The realm of <em>Aurelmark</em> stands open</h1>
+        <p class="lead reveal in d2">For a thousand years its walls were shut. Today the great gates are thrown wide — and every traveller, merchant, and dreamer is welcomed beneath the golden arch.</p>
+        <div class="hero-actions reveal in d3">
+          <a class="btn btn-primary" href="#summon">Enter the Gates
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#realm">Walk the Realm</a>
+        </div>
+        <div class="hero-meta reveal in d3">
+          <div><b>1,024</b><small>Years of Reign</small></div>
+          <div><b>9</b><small>Open Provinces</small></div>
+          <div><b>∞</b><small>Welcome Within</small></div>
+        </div>
+      </div>
+
+      <div class="castle-stage reveal in d2" aria-hidden="false">
+        <div class="castle-glow" aria-hidden="true"></div>
+        <!-- Castle with OPEN GATES -->
+        <svg class="castle" viewBox="0 0 460 420" role="img" aria-label="A great stone castle with its golden gates open wide and warm light pouring out.">
+          <defs>
+            <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3A3128"/>
+              <stop offset="1" stop-color="#241D16"/>
+            </linearGradient>
+            <linearGradient id="stoneLight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#4A3F31"/>
+              <stop offset="1" stop-color="#2C241B"/>
+            </linearGradient>
+            <linearGradient id="gateGlow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FBE8B0"/>
+              <stop offset="0.5" stop-color="#E8C36B"/>
+              <stop offset="1" stop-color="#C8962A"/>
+            </linearGradient>
+            <linearGradient id="flag" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#E8C36B"/>
+              <stop offset="1" stop-color="#C8962A"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ground -->
+          <ellipse cx="230" cy="404" rx="210" ry="14" fill="#0E0B08" opacity="0.7"/>
+
+          <!-- main keep body -->
+          <rect x="120" y="150" width="220" height="250" fill="url(#stone)" stroke="#1B150F" stroke-width="2"/>
+
+          <!-- side towers -->
+          <rect x="70" y="120" width="62" height="280" fill="url(#stoneLight)" stroke="#1B150F" stroke-width="2"/>
+          <rect x="328" y="120" width="62" height="280" fill="url(#stoneLight)" stroke="#1B150F" stroke-width="2"/>
+
+          <!-- tower crenellations -->
+          <g fill="url(#stoneLight)" stroke="#1B150F" stroke-width="2">
+            <rect x="70" y="108" width="14" height="16"/><rect x="94" y="108" width="14" height="16"/><rect x="118" y="108" width="14" height="16"/>
+            <rect x="328" y="108" width="14" height="16"/><rect x="352" y="108" width="14" height="16"/><rect x="376" y="108" width="14" height="16"/>
+          </g>
+          <!-- keep crenellations -->
+          <g fill="url(#stone)" stroke="#1B150F" stroke-width="2">
+            <rect x="120" y="138" width="18" height="16"/><rect x="156" y="138" width="18" height="16"/><rect x="192" y="138" width="18" height="16"/>
+            <rect x="250" y="138" width="18" height="16"/><rect x="286" y="138" width="18" height="16"/><rect x="322" y="138" width="18" height="16"/>
+          </g>
+
+          <!-- tower roofs -->
+          <path d="M66 108 L101 64 L136 108 Z" fill="#7A2E26" stroke="#1B150F" stroke-width="2"/>
+          <path d="M324 108 L359 64 L394 108 Z" fill="#7A2E26" stroke="#1B150F" stroke-width="2"/>
+
+          <!-- banners -->
+          <g class="gate-light">
+            <line x1="101" y1="64" x2="101" y2="34" stroke="#C8962A" stroke-width="2"/>
+            <path d="M101 36 L130 42 L101 52 Z" fill="url(#flag)"/>
+            <line x1="359" y1="64" x2="359" y2="34" stroke="#C8962A" stroke-width="2"/>
+            <path d="M359 36 L388 42 L359 52 Z" fill="url(#flag)"/>
+          </g>
+
+          <!-- tower windows -->
+          <g fill="#1A140D">
+            <rect x="92" y="150" width="18" height="26" rx="9"/>
+            <rect x="92" y="210" width="18" height="26" rx="9"/>
+            <rect x="350" y="150" width="18" height="26" rx="9"/>
+            <rect x="350" y="210" width="18" height="26" rx="9"/>
+          </g>
+          <g fill="url(#gateGlow)" class="gate-light" opacity="0.9">
+            <rect x="95" y="153" width="12" height="20" rx="6"/>
+            <rect x="353" y="153" width="12" height="20" rx="6"/>
+          </g>
+
+          <!-- gatehouse arch -->
+          <path d="M178 400 L178 270 A52 52 0 0 1 282 270 L282 400 Z" fill="#15100B" stroke="#1B150F" stroke-width="2"/>
+
+          <!-- warm light pouring from the OPEN gateway -->
+          <path d="M186 400 L186 274 A44 44 0 0 1 274 274 L274 400 Z" fill="url(#gateGlow)" class="gate-light"/>
+          <!-- light spill on the ground -->
+          <path d="M186 400 L150 400 L120 420 L340 420 L310 400 L274 400 Z" fill="url(#gateGlow)" opacity="0.28" class="gate-light"/>
+
+          <!-- the two open gate doors, swung outward -->
+          <g stroke="#3A2A12" stroke-width="2">
+            <path d="M186 400 L186 276 A44 44 0 0 1 198 248 L160 262 L160 400 Z" fill="#6B4A1E"/>
+            <path d="M274 400 L274 276 A44 44 0 0 0 262 248 L300 262 L300 400 Z" fill="#5C3F19"/>
+          </g>
+          <!-- gate plank lines -->
+          <g stroke="#3A2A12" stroke-width="1.4" opacity="0.7">
+            <line x1="170" y1="290" x2="170" y2="396"/><line x1="180" y1="285" x2="180" y2="396"/>
+            <line x1="290" y1="290" x2="290" y2="396"/><line x1="280" y1="285" x2="280" y2="396"/>
+          </g>
+          <!-- gate hinges / studs -->
+          <g fill="#E8C36B">
+            <circle cx="165" cy="300" r="2.4"/><circle cx="165" cy="340" r="2.4"/><circle cx="165" cy="380" r="2.4"/>
+            <circle cx="295" cy="300" r="2.4"/><circle cx="295" cy="340" r="2.4"/><circle cx="295" cy="380" r="2.4"/>
+          </g>
+
+          <!-- keystone -->
+          <path d="M222 230 L238 230 L234 248 L226 248 Z" fill="#E8C36B"/>
+        </svg>
+      </div>
+    </div>
+
+    <a class="scroll-cue" href="#realm" aria-label="Scroll to explore">
+      <span>Pass Beneath</span>
+      <span class="line" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- ===== PROCLAMATION ===== -->
+  <section class="proclaim">
+    <div class="wrap reveal">
+      <span class="eyebrow">By Decree of the Open Court</span>
+      <p>“Let no traveller be turned away. Our <span>gates are open</span>, our hearth is wide, our roads are yours.”</p>
+    </div>
+  </section>
+
+  <!-- ===== THE REALM (PILLARS) ===== -->
+  <section class="block" id="realm">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow left">Within the Walls</span>
+        <h2 class="section-title">A realm built to welcome</h2>
+        <p class="lead">Aurelmark was raised not as a fortress to keep the world out, but as a city to bring the world in. Four great pillars hold its open gates aloft.</p>
+      </div>
+
+      <div class="pillars">
+        <article class="pillar reveal d1">
+          <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M10 42V20l14-10 14 10v22"/><path d="M20 42V30a4 4 0 0 1 8 0v12"/><path d="M6 42h36"/>
+          </svg>
+          <h3>The Open Gates</h3>
+          <p>The grand arch never closes. Day or night, the golden light of the keep guides every wanderer safely home.</p>
+        </article>
+        <article class="pillar reveal d2">
+          <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M8 42V14l8-6 8 6 8-6 8 6v28"/><path d="M16 8v12M32 8v12"/><path d="M4 42h40"/>
+          </svg>
+          <h3>The High Keep</h3>
+          <p>At the heart stands the keep — a hall of counsel where every voice, highborn or humble, is heard before the throne.</p>
+        </article>
+        <article class="pillar reveal d1">
+          <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M24 6l4 8 9 1-6.5 6.5L32 30l-8-4-8 4 1.5-8.5L11 15l9-1z"/><path d="M24 30v12"/>
+          </svg>
+          <h3>The Golden Court</h3>
+          <p>Beneath gilded vaults the court convenes — artisans, scholars, and envoys shaping the laws of a free people.</p>
+        </article>
+        <article class="pillar reveal d2">
+          <svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 38c8-4 8-4 16 0s8 4 16 0"/><path d="M6 28c8-4 8-4 16 0s8 4 16 0"/><path d="M24 6v16"/><circle cx="24" cy="6" r="2.5" fill="currentColor"/>
+          </svg>
+          <h3>The Open Roads</h3>
+          <p>Nine highways spill from the gate, binding distant provinces in trade, story, and the long peace of the empire.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HERALDRY / STATS ===== -->
+  <section class="block heraldry">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">The Empire in Figures</span>
+        <h2 class="section-title">Measured in stone and welcome</h2>
+      </div>
+      <div class="stats">
+        <div class="stat reveal d1"><b><span class="count" data-to="1024">0</span></b><small>Years the Banner Has Flown</small></div>
+        <div class="stat reveal d2"><b><span class="count" data-to="9">0</span> <span class="unit">Provinces</span></b><small>United Under One Crown</small></div>
+        <div class="stat reveal d1"><b><span class="count" data-to="240">0</span><span class="unit">k</span></b><small>Souls Within the Walls</small></div>
+        <div class="stat reveal d2"><b><span class="count" data-to="365">0</span></b><small>Days the Gates Stay Open</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROVINCES ===== -->
+  <section class="block" id="provinces">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow left">Lands of Aurelmark</span>
+        <h2 class="section-title">Nine provinces, one open gate</h2>
+        <p class="lead">From the amber coast to the high passes, each province sends its banners to the capital — and finds the gates already open in welcome.</p>
+      </div>
+
+      <div class="realms">
+        <article class="realm reveal d1">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><circle cx="50" cy="34" r="22"/><rect x="44" y="50" width="12" height="44"/></svg>
+          <span class="tag">Province I</span>
+          <h3>Goldenmere</h3>
+          <p>The shining harbour where merchant ships first see the gate-light across the bay.</p>
+        </article>
+        <article class="realm reveal d2">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M50 8l36 64H14z"/></svg>
+          <span class="tag">Province II</span>
+          <h3>Stormcrest</h3>
+          <p>High mountain holds whose watchtowers signal peace with mirrored flame.</p>
+        </article>
+        <article class="realm reveal d3">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><rect x="20" y="20" width="60" height="60" rx="8"/></svg>
+          <span class="tag">Province III</span>
+          <h3>Vellgrove</h3>
+          <p>Orchard valleys that feed the capital and crown each harvest at the open gate.</p>
+        </article>
+        <article class="realm reveal d1">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="22" fill="#221C16"/></svg>
+          <span class="tag">Province IV</span>
+          <h3>Sunhollow</h3>
+          <p>Sandstone cities of scholars, keepers of the empire's longest memory.</p>
+        </article>
+        <article class="realm reveal d2">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M50 6l12 30 32 2-26 20 10 32-28-20-28 20 10-32-26-20 32-2z"/></svg>
+          <span class="tag">Province V</span>
+          <h3>Brightfen</h3>
+          <p>Lantern-lit wetlands whose ferrymen carry travellers to the very gate.</p>
+        </article>
+        <article class="realm reveal d3">
+          <svg class="pat" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><rect x="14" y="40" width="72" height="20" rx="10"/><rect x="40" y="14" width="20" height="72" rx="10"/></svg>
+          <span class="tag">Provinces VI–IX</span>
+          <h3>The Frontier</h3>
+          <p>Four young marches where the roads still run — and the gate stands open for all who follow them.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CHRONICLE ===== -->
+  <section class="block chronicle" id="chronicle">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">The Long Chronicle</span>
+        <h2 class="section-title">How the gates came to open</h2>
+      </div>
+      <div class="timeline">
+        <div class="epoch reveal d1">
+          <span class="dot" aria-hidden="true"></span>
+          <div class="year">Year 1</div>
+          <h3>The First Stone</h3>
+          <p>A wandering people lay the foundation of the keep upon the golden hill, and name it Aurelmark.</p>
+        </div>
+        <div class="epoch reveal d1">
+          <span class="dot" aria-hidden="true"></span>
+          <div class="year">Year 312</div>
+          <h3>The Walls Rise</h3>
+          <p>The great curtain wall and twin towers are completed, and the empire knows a century of quiet strength.</p>
+        </div>
+        <div class="epoch reveal d2">
+          <span class="dot" aria-hidden="true"></span>
+          <div class="year">Year 700</div>
+          <h3>The Closed Age</h3>
+          <p>Fearful of the world beyond, the gates are barred. For three hundred years no stranger crosses the threshold.</p>
+        </div>
+        <div class="epoch reveal d2">
+          <span class="dot" aria-hidden="true"></span>
+          <div class="year">Year 1024</div>
+          <h3>The Gates Thrown Wide</h3>
+          <p>By decree of the Open Court the doors are unbarred forever. Aurelmark becomes the empire of all who would enter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SUMMON / FINAL CTA ===== -->
+  <section class="block summon" id="summon">
+    <div class="wrap">
+      <span class="eyebrow reveal">The Invitation</span>
+      <h1 class="display reveal d1">Enter through the <em>open gates</em></h1>
+      <p class="lead reveal d2">The light of the keep is lit and the road is clear. Take your place within the empire of Aurelmark — the gates are open, and they are open for you.</p>
+      <div class="hero-actions reveal d3" style="justify-content:center">
+        <a class="btn btn-primary" href="#top">Cross the Threshold
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#chronicle">Read the Chronicle</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Aurelmark, home">
+          <svg class="crest" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 5l2.2 3.7 4.4-1.5-.8 4.5 3 2.3-3 2.3.8 4.5-4.4-1.5L16 27l-2.2-3.7-4.4 1.5.8-4.5-3-2.3 3-2.3-.8-4.5 4.4 1.5L16 5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/>
+            <circle cx="16" cy="16" r="2.6" fill="currentColor"/>
+          </svg>
+          <b>Aurel<span>mark</span></b>
+        </a>
+        <p class="foot-tag">The empire whose gates stand open — a realm of stone keeps, golden courts, and open roads.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>The Realm</h4>
+          <a href="#realm">Within the Walls</a>
+          <a href="#provinces">The Provinces</a>
+          <a href="#chronicle">The Chronicle</a>
+        </div>
+        <div class="foot-col">
+          <h4>The Court</h4>
+          <a href="#summon">Enter the Gates</a>
+          <a href="#realm">The High Keep</a>
+          <a href="#realm">The Golden Court</a>
+        </div>
+        <div class="foot-col">
+          <h4>The Roads</h4>
+          <a href="#provinces">Trade Routes</a>
+          <a href="#provinces">The Frontier</a>
+          <a href="#top">Return to Gate</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© Year 1024 · The Empire of Aurelmark. The gates remain open.</span>
+      <span>Crafted under the golden arch.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Mobile menu
+  const toggle = document.getElementById('navtoggle');
+  const links = document.getElementById('navlinks');
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.addEventListener('click', e => {
+    if (e.target.tagName === 'A') { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+  });
+
+  // Scroll reveal
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reveals = document.querySelectorAll('.reveal:not(.in)');
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(el => el.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); obs.unobserve(en.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    reveals.forEach(el => io.observe(el));
+  }
+
+  // Count-up stats
+  const counters = document.querySelectorAll('.count');
+  const animate = el => {
+    const to = +el.dataset.to;
+    if (reduce) { el.textContent = to.toLocaleString(); return; }
+    const dur = 1400, start = performance.now();
+    const step = now => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(eased * to).toLocaleString();
+      if (p < 1) requestAnimationFrame(step); else el.textContent = to.toLocaleString();
+    };
+    requestAnimationFrame(step);
+  };
+  if ('IntersectionObserver' in window) {
+    const cio = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => { if (en.isIntersecting) { animate(en.target); obs.unobserve(en.target); } });
+    }, { threshold: 0.6 });
+    counters.forEach(c => cio.observe(c));
+  } else {
+    counters.forEach(animate);
+  }
+</script>
+</body>
+</html>
