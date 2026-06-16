@@ -34,6 +34,14 @@
     background:#9fb6c4;
   }
 
+  /* cinematic camera push-in (Ken Burns) — slow, professional */
+  .camera{
+    position:absolute;inset:0;z-index:0;
+    transform-origin:52% 62%;
+    animation:push 22s var(--ease-in-out-cubic) infinite alternate;
+  }
+  @keyframes push{from{transform:scale(1.02)}to{transform:scale(1.10) translateX(-1.2%)}}
+
   /* ---------- SKY ---------- */
   .sky{
     position:absolute;inset:0;z-index:0;
@@ -161,17 +169,76 @@
     opacity:0;animation:fadeIn 1s ease .1s forwards;
   }
 
+  /* drifting clouds */
+  .cloud{
+    position:absolute;z-index:1;background:#fff;border-radius:60px;opacity:.85;
+    filter:blur(.5px) drop-shadow(0 6px 10px rgba(0,0,0,.05));
+  }
+  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .c1{top:8%;left:-25%;width:150px;height:40px;animation:drift 60s linear infinite}
+  .c1::before{width:62px;height:62px;top:-28px;left:26px}
+  .c1::after{width:48px;height:48px;top:-20px;left:80px}
+  .c2{top:18%;left:-35%;width:110px;height:30px;transform:scale(.85);animation:drift 80s linear infinite 10s}
+  .c2::before{width:46px;height:46px;top:-20px;left:20px}
+  .c2::after{width:36px;height:36px;top:-14px;left:58px}
+  @keyframes drift{from{transform:translateX(0)}to{transform:translateX(170vw)}}
+
+  /* floating dust motes in the sunlight — very subtle */
+  .motes{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+  .mote{
+    position:absolute;width:4px;height:4px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,250,235,.9),rgba(255,250,235,0) 70%);
+    opacity:0;animation:float linear infinite;
+  }
+  @keyframes float{
+    0%{opacity:0;transform:translateY(20px) translateX(0)}
+    15%{opacity:.8}
+    85%{opacity:.6}
+    100%{opacity:0;transform:translateY(-80px) translateX(24px)}
+  }
+
+  /* professional vignette + warm light grade + faint grain */
+  .grade{
+    position:absolute;inset:0;z-index:8;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 18% 22%,rgba(255,238,200,.22),transparent 45%),
+      radial-gradient(140% 120% at 50% 60%,transparent 55%,rgba(0,0,0,.32) 100%);
+    mix-blend-mode:multiply;
+  }
+  .grade::after{
+    content:"";position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;
+    background-image:radial-gradient(1px 1px at 25% 30%,#fff 50%,transparent 52%),
+      radial-gradient(1px 1px at 65% 70%,#000 50%,transparent 52%),
+      radial-gradient(1px 1px at 80% 20%,#fff 50%,transparent 52%);
+    background-size:5px 5px;
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{to{transform:translate(2px,1px)}}
+
+  /* glossy paint sheen sweep — restrained, every few seconds */
+  .sheen{animation:sheen 7s var(--ease-in-out-cubic) 2s infinite}
+  @keyframes sheen{
+    0%{transform:translateX(0) skewX(-22deg)}
+    55%{transform:translateX(900px) skewX(-22deg)}
+    100%{transform:translateX(900px) skewX(-22deg)}
+  }
+
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important}
+    .camera{transform:none}
     .car,.car-shadow,.woman,.sign{opacity:1;transform:none}
     .woman{transform:none}
     .car{transform:translateX(-50%)}
+    .mote{display:none}
   }
 </style>
 </head>
 <body>
   <div class="scene">
+   <div class="camera">
     <div class="sky"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
     <div class="treeline"></div>
     <div class="haze"></div>
     <div class="lot"></div>
@@ -252,6 +319,20 @@
         <linearGradient id="bumper" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#274c44"/><stop offset="1" stop-color="#0f261f"/>
         </linearGradient>
+        <!-- glossy specular sweep gradient -->
+        <linearGradient id="sheenGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset=".45" stop-color="#eafff8" stop-opacity="0"/>
+          <stop offset=".5" stop-color="#f4fffc" stop-opacity=".75"/>
+          <stop offset=".55" stop-color="#eafff8" stop-opacity="0"/>
+          <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <!-- silhouette of painted panels, so the sheen only crosses the bodywork -->
+        <clipPath id="carClip">
+          <path d="M150 150 C160 120 230 110 300 108 L470 112 C500 116 540 130 560 152 L568 196 C568 214 558 222 540 224 L120 224 C104 224 96 214 98 198 L108 168 C116 156 132 152 150 150 Z"/>
+          <path d="M214 110 C236 88 268 80 318 80 L452 84 C486 86 506 98 520 116 L470 112 L300 108 C262 110 236 112 214 110 Z"/>
+          <path d="M98 198 C92 176 96 162 110 150 C90 156 70 170 56 192 C44 210 44 224 58 232 L120 232 C104 230 98 216 98 198 Z"/>
+        </clipPath>
       </defs>
 
       <!-- ===== BODY ===== -->
@@ -366,7 +447,27 @@
 
       <!-- rocker panel / sill -->
       <path d="M230 224 L470 226 L466 234 L234 232 Z" fill="#0c211b" opacity=".7"/>
+
+      <!-- glossy specular highlight that slowly sweeps across the paint -->
+      <g clip-path="url(#carClip)">
+        <rect class="sheen" x="-260" y="60" width="220" height="180" fill="url(#sheenGrad)" transform="skewX(-22)"/>
+      </g>
     </svg>
   </div>
+
+   </div><!-- /camera -->
+
+   <!-- floating dust motes in the light -->
+   <div class="motes">
+     <span class="mote" style="left:24%;top:60%;animation-duration:11s;animation-delay:0s"></span>
+     <span class="mote" style="left:38%;top:66%;animation-duration:14s;animation-delay:2s"></span>
+     <span class="mote" style="left:52%;top:58%;animation-duration:9s;animation-delay:4s"></span>
+     <span class="mote" style="left:63%;top:64%;animation-duration:13s;animation-delay:1s"></span>
+     <span class="mote" style="left:72%;top:55%;animation-duration:16s;animation-delay:5s"></span>
+     <span class="mote" style="left:30%;top:52%;animation-duration:12s;animation-delay:6s"></span>
+   </div>
+
+   <!-- colour grade + vignette + grain -->
+   <div class="grade"></div>
 </body>
 </html>
